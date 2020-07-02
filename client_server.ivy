@@ -1,0 +1,44 @@
+#lang ivy1.7
+
+# Stanford CURIS 2019-2020 Formal Verification - Lara Franciulli
+
+# CLIENT-SERVER MODEL - STAGE 0 (IVY TUTORIAL)
+# This model handles connections between
+# clients and servers.
+# The main property we want to assure is that
+# no two clients are connected to a server at
+# the same time.
+
+type client
+type server
+
+relation link(X:client, Y:server)
+relation semaphore(X:server)
+
+after init {
+    semaphore(W) := true;
+    link(X,Y) := false
+}
+
+action connect(x:client,y:server) = {
+  require semaphore(y);
+  link(x,y) := true;
+  semaphore(y) := false
+}
+
+action disconnect(x:client,y:server) = {
+  require link(x,y);
+  link(x,y) := false;
+  semaphore(y) := true
+}
+
+# invariant ~(X ~= Z & link(X,Y) & link(Z,Y))
+invariant forall S,C1,C2. link(C1,S) & link(C2,S) -> C1 = C2
+
+# new conjectures
+# invariant ~(C ~= D & semaphore(S) & link(C,S))
+invariant forall S, C. link(C, S) -> ~semaphore(S)
+
+export connect
+export disconnect
+

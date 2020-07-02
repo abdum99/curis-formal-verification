@@ -1,0 +1,111 @@
+#lang ivy1.7
+
+# Stanford CURIS 2019-2020 Formal Verification - Lara Franciulli
+
+# CLIENT-SERVER MODEL - STAGE 1 (NO MESSAGE TYPES)
+# This model handles connections between
+# clients and servers using no message types.
+# The main property we want to assure is that
+# no two clients are connected to a server at
+# the same time.
+
+type client
+type server
+
+# true means server has the lock (= is available)
+relation semaphore(S:server)
+
+# set of locks client holds
+relation holds_lock(C:client, S:server)
+
+# indicates if there are pending messages between clients and servers
+relation request_msg(C:client, S:server)
+relation grant_msg(C:client, S:server)
+relation release_msg(C:client, S:server)
+
+after init {
+    semaphore(S) := true;
+    holds_lock(C, S) := false;
+    request_msg(C, S) := false;
+    grant_msg(C, S) := false;
+    release_msg(C, S) := false;
+}
+
+
+# client requests lock to server
+action request_lock(c:client, s:server) = {
+    request_msg(c, s) := true;
+}
+
+export request_lock
+
+# server grants lock to client 
+action grant_lock(c:client, s:server) = {
+    require request_msg(c, s);
+    request_msg(c, s) := *;
+    require semaphore(s);
+    semaphore(s) := false;
+    grant_msg(c, s) := true;
+}
+
+export grant_lock
+
+# client receives lock from server
+action receive_lock(c:client, s:server) = {
+    require grant_msg(c, s);
+    holds_lock(c, s) := true;
+    grant_msg(c, s) := false;
+}
+
+export receive_lock
+
+# client returns lock to server
+action return_lock(c:client, s:server) = {
+    require holds_lock(c, s);
+    holds_lock(c, s) := false;
+    release_msg(c, s) := true;
+}
+
+export return_lock
+
+# server releases lock from client
+action release_lock(c:client, s:server) = {
+    require release_msg(c, s);
+    release_msg(c, s) := false;
+    semaphore(s) := true;
+}
+
+export release_lock
+
+# INVARIANTS
+
+# no two clients associated with same server
+invariant [mutual_exclusion] forall C1, C2, S. holds_lock(C1, S) & holds_lock(C2, S) -> C1 = C2
+
+# if there is a client connected to a server, the server's semaphore is dow
+invariant forall C, S. holds_lock(C, S) -> ~semaphore(S)
+
+# there is at most one grant message per server
+invariant forall C1, C2, S. C1 ~= C2 -> ~(grant_msg(C1, S) & grant_msg(C2, S))
+
+# if a client has server's lock, there is no grant message associated w/ the server
+invariant forall C1, C2, S. C1 ~= C2 & holds_lock(C1, S) -> ~grant_msg(C2, S)
+
+# there is at most one release message per server
+invariant forall C1, C2, S. C1 ~= C2 -> ~(release_msg(C1, S) & release_msg(C2, S))
+
+# if there is eitheir a grant or a release message for a server, its semaphore is down
+invariant forall C, S. grant_msg(C, S) -> ~semaphore(S)
+invariant forall C, S. release_msg(C, S) -> ~semaphore(S)
+
+# there are no grant and release messages for a server at a time
+invariant forall C1, C2, S. release_msg(C1, S) -> ~grant_msg(C2, S)
+
+# if client holds lock for a server, there is no grant messages for the server
+invariant forall C1, C2, S. holds_lock(C1, S) -> ~grant_msg(C1, S) & ~grant_msg(C2, S)
+
+# if client holds the lock for a server, there is no release message for the server
+invariant forall C1, C2, S. holds_lock(C1, S) -> ~release_msg(C2, S)
+
+# if there is a release message for a server, no client holds this server's lock
+invariant forall C, S. release_msg(C, S) -> ~holds_lock(C, S)
