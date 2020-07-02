@@ -62,7 +62,7 @@ export request_lock
 # server receives request from client and saves it
 action save_request(c:client, s:server, id:idx) = {
     require request_msg(c, s, id);
-    queue(s, c, id) := true;
+    queue(s, c, new_idx()) := true;
     request_msg(c, s, id) := false;
 }
 
