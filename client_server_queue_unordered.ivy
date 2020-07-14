@@ -2,14 +2,17 @@
 
 # Stanford CURIS 2019-2020 Formal Verification - Lara Franciulli
 
-# CLIENT-SERVER MODEL - STAGE 2 (IDS FOR MULTISET)
+# CLIENT-SERVER MODEL - STAGE 2 (REQUESTS IN MULTISETS)
 # This model manages connections between
 # clients and servers using no message types.
-# The model uses ids to keep track of multiple
-# requests for a server.
 # The main property we want to assure is that
 # no two clients are connected to a server at
 # the same time.
+# Clients only receive a lock from a server
+# if they have previously sent a request
+# to that server.
+# This model allows servers to keep track of multiple
+# requests using multisets.
 
 type client
 type server
@@ -20,8 +23,6 @@ type idx
 relation semaphore(S:server)  # : server -> bool
 # multiset of request messages for server
 relation queue(S:server, C:client, I:idx) # : server -> N^client
-
-# : server -> client*
 
 # LOCAL STATE OF CLIENTS
 # set of locks client holds
@@ -36,6 +37,25 @@ relation release_msg(C:client, S:server, I:idx) # : N^(client x server)
 # GHOST (ids for enconding multisets)
 # indicates if id was already used
 relation used(I:idx)
+
+# GHOST monitor (to make sure servers only grant locks that were requested)
+object monitor = {
+    individual a: client
+    relation requested(S:server)
+    after init {
+	requested(S) := false;
+    }
+    action request(c: client, s:server) = {
+	if c = a {
+	    requested(s) := true;
+	}
+    }
+    action receive(c: client, s:server) = {
+	if c = a {
+	    assert requested(s);
+	}
+    }
+}
 
 after init {
     semaphore(S) := true;
@@ -55,6 +75,9 @@ action new_idx returns (id:idx) = {
 # client requests lock to server
 action request_lock(c:client, s:server) = {
     request_msg(c, s, new_idx()) := true;
+
+    call monitor.request(c, s);
+
 }
 
 export request_lock
@@ -84,6 +107,8 @@ action receive_lock(c:client, s:server, id:idx) = {
     require grant_msg(c, s, id);
     holds_lock(c, s) := true;
     grant_msg(c, s, id) := false;
+
+    call monitor.receive(c, s);
 }
 
 export receive_lock
@@ -93,6 +118,7 @@ action return_lock(c:client, s:server) = {
     require holds_lock(c, s);
     holds_lock(c, s) := false;
     release_msg(c, s, new_idx()) := true;
+
 }
 
 export return_lock
@@ -115,25 +141,26 @@ invariant [mutual_exclusion] forall C1, C2, S. holds_lock(C1, S) & holds_lock(C2
 invariant forall C, S. holds_lock(C, S) -> ~semaphore(S)
 
 # there is at most one grant message associated with a server
-invariant forall C1, C2, S, I1, I2. C1 ~= C2 -> ~(grant_msg(C1, S, I1) & grant_msg(C2, S, I2))
-invariant forall C, S, I1, I2. I1 ~= I2 -> ~(grant_msg(C, S, I1) & grant_msg(C, S, I2))
+invariant forall C1, C2, S, I1, I2. grant_msg(C1, S, I1) & grant_msg(C2, S, I2) -> C1 = C2 & I1 = I2
 
 # there is at most one release message associated with a sever
-invariant forall C1, C2, S, I1, I2. C1 ~= C2 -> ~(release_msg(C1, S, I1) & release_msg(C2, S, I2))
-invariant forall C, S, I1, I2. I1 ~= I2 & release_msg(C, S, I1) -> ~release_msg(C, S, I2)
+invariant forall C1, C2, S, I1, I2. release_msg(C1, S, I1) & release_msg(C2, S, I2) -> C1 = C2 & I1 = I2
 
 # if there is either a grant or release message for a server, its semaphore is down
-invariant forall C, S, I. grant_msg(C, S, I) -> ~semaphore(S)
-invariant forall C, S, I. release_msg(C, S, I) -> ~semaphore(S)
+invariant forall C, S, I. grant_msg(C, S, I) | release_msg(C, S, I) -> ~semaphore(S)
 
 # there are no grant and release message for a server at the same time
-invariant forall C1, C2, S, I1, I2. release_msg(C1, S, I1) -> ~grant_msg(C2, S, I2)
+invariant forall C1, C2, S, I1, I2. ~(release_msg(C1, S, I1) & grant_msg(C2, S, I2))
 
 # if a client holds lock for a server, there is no grant message for the server
-invariant forall C1, C2, S, I1, I2. holds_lock(C1, S) -> ~grant_msg(C1, S, I1) & ~grant_msg(C2, S, I2)
+invariant forall C1, C2, S, I. ~(holds_lock(C1, S) & grant_msg(C2, S, I))
 
-# if a client holds lock for server, there is no release message for the server 
-invariant forall C1, C2, S, I. holds_lock(C1, S) -> ~release_msg(C2, S, I)
+# there are no client holding lock for a server and release message for same server at same time
+invariant forall C1, C2, S, I. ~(holds_lock(C1, S) & release_msg(C2, S, I))
 
-# if there is a release message for a server, no client holds lock for the server
-invariant forall C, S, I. release_msg(C, S, I) -> ~holds_lock(C, S)
+# clients only receive lock from server if client previously sent a request to server
+invariant forall C, S, I. C = monitor.a & grant_msg(C, S, I) -> monitor.requested(S)
+invariant forall C, S, I. C = monitor.a & queue(S, C, I) -> monitor.requested(S)
+invariant forall C, S, I. C = monitor.a & request_msg(C, S, I) -> monitor.requested(S)
+
+
