@@ -18,7 +18,6 @@
 
 type client
 type server
-type idx
 type transaction
 
 # multiset of pairs
@@ -93,14 +92,10 @@ instantiate request_msg : multiset_3(client, server, transaction) # : N^(client 
 instantiate grant_msg : multiset_3(client, server, transaction) # : N^(client x server x transaction)
 instantiate release_msg : multiset_2(client, server) # : N^(client x server)
 
-# GHOST ids (for enconding multisets)
-# indicates if id was already used
-relation used(I:idx)
-
 # indicates if transaction was already initiated
 relation taken(T:transaction)
 
-# # GHOST monitor (to make sure client only receives lock if previously requested it)
+# GHOST monitor (to make sure client only receives lock if previously requested it)
 object monitor = {
     individual a: client
     relation started(S:server, T:transaction)
@@ -131,6 +126,7 @@ after init {
     holds_lock(C, S) := false;
 }
 
+# GHOST
 # procedure to initialize new transaction id
 action new_transaction returns (t:transaction) = {
     assume ~taken(t);
