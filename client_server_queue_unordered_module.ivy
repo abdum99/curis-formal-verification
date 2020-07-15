@@ -22,7 +22,7 @@ type client
 type server
 type idx
 
-# mutiset
+# multiset
 module multiset_1(t1) = {
     type idx
     relation r(X: t1, I: idx)
@@ -123,12 +123,6 @@ object monitor = {
 after init {
     semaphore(S) := true;
     holds_lock(C, S) := false;
-}
-
-# procedure to initialize new message id
-action new_idx returns (id:idx) = {
-    assume ~used(id);
-    used(id) := true;
 }
 
 # client requests lock to server
