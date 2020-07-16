@@ -1,0 +1,110 @@
+#lang ivy1.7
+
+# Stanford CURIS 2019-2020 Formal Verification - Lara Franciulli
+
+# ORDERED QUEUE (FIFO) OF PAIRS
+# This file designs and tests an ordered
+# queue (FIFO) of pairs.
+# The queue has two commands: push and pop.
+# The queue admits multiple pairs of the same
+# two elements.
+
+type t
+
+# FIFO queue of pairs
+module fifo_2(t1, t2) = {
+    type idx
+    relation r(A:t1, B:t2, I:idx)
+    relation order(X:idx, Y:idx)
+    
+    after init {
+	r(A, B, I) := false;
+	order(X, Y) := false;
+    }
+    
+    action push(a:t1, b:t2) = {
+	var id:idx;
+	assume ~order(id, id);
+	r(a, b, id) := true;
+	order(id, id) := true;
+	order(I, id) := order(I, I);
+    }
+
+    action empty returns (res:bool) = {
+	res := forall I. ~order(I, I);
+    }
+    
+    action pop returns (a:t1, b:t2) = {
+	require ~empty();
+	var id: idx;
+	assume r(a, b, id) & (forall J. order(J, J) -> order(id, J));
+	r(a, b, id) := false;
+	order(id, I) := false;
+	order(I, id) := false;
+    }
+    
+    action member(a:t1, b:t2) returns (c:bool) = {
+	c := exists I. (r(a, b, I) & order(I, I));
+    }
+    
+    # INVARIANTS
+    # reflexivity
+    invariant order(X, Y) -> order(X, X) & order(Y, Y)
+
+    # antisymmetry
+    invariant order(X, Y) & order(Y, X) -> X = Y
+
+    # transitivity
+    invariant order(X, Y) & order(Y, Z) -> order(X, Z)
+
+    # linearity/totality
+    invariant order(X, X) & order(Y, Y) -> (order(X, Y) | order(Y, X))
+
+    # if there is a saved requested associated w/ id, id is in the queue
+    invariant r(A, B, I) -> order(I, I)
+
+    # no queue id is used for two different pairs A-B at the same time
+    invariant r(A1, B1, I) & r(A2, B2, I) -> A1 = A2 & B1 = B2
+
+    # if id is in the queue, there exists pair A-B associated with id
+    invariant forall I. order(I, I) -> exists A, B. r(A, B, I)
+}
+
+instantiate queue : fifo_2(t, t)
+
+action test = {
+    assume queue.empty();
+
+    var a:t;
+    var a2:t;
+
+    # pushing first element
+    assert ~queue.member(a, a2);
+    call queue.push(a, a2);
+    assert queue.member(a, a2);
+
+    var b:t;
+    var b2:t;
+
+    # pushing second (different) element
+    assume ~queue.member(b, b2);
+    call queue.push(b, b2);
+    assert queue.member(b, b2);
+
+    var x:t;
+    var x2:t;
+    
+    # removing first element
+    (x, x2) := queue.pop();
+    assert a = x & a2 = x2;
+    assert ~queue.member(a, a2);
+
+    # removing second element
+    (x, x2) := queue.pop();
+    assert b = x & b2 = x2;
+    assert ~queue.member(b, b2);
+    
+    assert queue.empty();
+}
+
+export test
