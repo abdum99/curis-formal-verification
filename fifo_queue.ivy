@@ -70,41 +70,41 @@ module fifo_2(t1, t2) = {
     invariant forall I. order(I, I) -> exists A, B. r(A, B, I)
 }
 
-instantiate queue : fifo_2(t, t)
+instantiate q : fifo_2(t, t)
 
 action test = {
-    assume queue.empty();
+    assume q.empty();
 
     var a:t;
     var a2:t;
 
     # pushing first element
-    assert ~queue.member(a, a2);
-    call queue.push(a, a2);
-    assert queue.member(a, a2);
+    assert ~q.member(a, a2);
+    call q.push(a, a2);
+    assert q.member(a, a2);
 
     var b:t;
     var b2:t;
 
     # pushing second (different) element
-    assume ~queue.member(b, b2);
-    call queue.push(b, b2);
-    assert queue.member(b, b2);
+    assume ~q.member(b, b2);
+    call q.push(b, b2);
+    assert q.member(b, b2);
 
     var x:t;
     var x2:t;
     
     # removing first element
-    (x, x2) := queue.pop();
+    (x, x2) := q.pop();
     assert a = x & a2 = x2;
-    assert ~queue.member(a, a2);
+    assert ~q.member(a, a2);
 
     # removing second element
-    (x, x2) := queue.pop();
+    (x, x2) := q.pop();
     assert b = x & b2 = x2;
-    assert ~queue.member(b, b2);
+    assert ~q.member(b, b2);
     
-    assert queue.empty();
+    assert q.empty();
 }
 
 export test
