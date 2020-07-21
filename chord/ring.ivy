@@ -1,0 +1,29 @@
+#lang ivy1.7
+
+
+# Stanford CURIS 2019-2020 Formal Verification - Lara Franciulli
+
+# Module for RING TOPOLOGY
+
+module ring(carrier) = {
+    relation btw(X:carrier, Y:carrier, Z:carrier)
+    
+    #INVARIANTS
+    
+    # cyclicity
+    axiom btw(X, Y, Z) -> btw (Y, Z, X)
+    
+    # transitivity
+    axiom btw(W, X, Y) & btw(W, Y, Z) -> btw(W, X, Z)
+
+    # antisymmetry & irreflexivity
+    axiom btw(X, Y, Z) -> ~btw(X, Z, Y)
+
+    # totality
+    axiom X ~= Y & X ~= Z & Y ~= Z -> btw(X, Y, Z) | btw(X, Z, Y)
+
+    # returns successor of x in the ring
+    action get(x:carrier) returns (y:carrier) = {
+        assume x ~= Z & y ~= Z -> ~btw(x, Z, y);
+    }
+}
