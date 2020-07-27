@@ -1,0 +1,140 @@
+#lang ivy1.7
+
+# An Ivy module for the paths in a partial function graph
+
+
+################################################################################
+#
+# An Ivy module for the paths in a partial function graph
+#
+# Module describing paths of a partial function. The function may be
+# cyclic, and may have f(x)=x. The function is built by calling the
+# "set" action. The function can be accessed "get" to get its
+# value. The "get" action has a precondition that the given element is
+# in the domain. The function can be made undefined by calling the
+# "remove" action.
+#
+# We represent paths in the graph using a ternary relation "p", while
+# remaining in Dyn-EPR.
+#
+# for any w, p(w,.,.) is a reflexive total order of elements reachable
+# from w, starting at f(w), and stopping at the first cycle (possibly
+# at w). The elements reachable from w are:
+#
+# R(w) = { z | p(w,z,z) }
+#
+# Note that the underlying function can be partial, and can also have
+# f(x)=x. f(x) is undefined iff R(x) is empty, and f(x)=x iff
+# R(x)={x}. x is on a cycle iff x in R(x), i.e. p(x,x,x).
+#
+# To see the function in the UI, View -> Add relation:
+# p(X,Y,Y) & (forall Z. p(X,Z,Z) -> p(X,Y,Z))
+#
+################################################################################
+
+module path_partial_function(carrier) = {
+    relation p(X:carrier,Y:carrier,Z:carrier)  # paths in the function graph
+    relation f(X:carrier,Y:carrier)  # the function edges
+
+    # Conjectures that ensure that p really describes the paths in the
+    # function graph. These conjectures form part of the safety
+    # property.
+    #
+    # p(w,.,.) is transitive
+    invariant p(W,X,Y) & p(W,Y,Z) -> p(W,X,Z)
+    # p(w,.,.) is antisymmetric
+    invariant p(W,X,Y) & p(W,Y,X) -> X = Y
+    # p(w,.,.) is total for R(w)
+    invariant p(W,X,X) & p(W,Y,Y) -> p(W,X,Y) | p(W,Y,X)
+    # p(w,.,.) is empty outside R(w)
+    invariant p(W,X,Y) -> p(W,X,X) & p(W,Y,Y)
+    # if x is in R(x), then it is maximal
+    invariant p(X,X,Y) -> X = Y
+    # reachability is transitive
+    invariant p(X,Y,Y) & p(Y,Z,Z) -> p(X,Z,Z)
+    # path consistency
+    invariant p(X,Y,Z) & p(X,Z,W) & Y ~= Z -> p(Y,Z,W)
+
+    # Conjectures that make f an under-approximation of the transitive
+    # reduction of p. f would be defined by:
+    # f(x,y) <-> p(x,y,y) & (forall z. (p(x,z,z) -> p(x,y,z)))
+    # The following conjecture is the -> direction:
+    invariant f(X,Y) -> (p(X,Y,Y) & (p(X,Z,Z) -> p(X,Y,Z)))
+    # invariant forall X,Y. (p(X,Y,Y) & (forall Z. (p(X,Z,Z) -> p(X,Y,Z)))) -> f(X,Y) # this creates a cycle
+    # The other direction is AE that breaks the inversion lemma
+    # (infinite model etc.), so it's only provided as an induction
+    # scheme, by the actions induction_first and induction_last.
+
+    # initially empty - f(x) is undefined anywhere
+    after init {
+	p(X,Y,Z) := false;
+	f(X,Y) := false;
+    }
+
+    # updates f(x) to receive y
+    action set(x:carrier,y:carrier) = {
+	assert ~dom(x);
+        #call remove(x);
+        p(W,U,V) := (
+            p(W,U,V) |  ~p(W,V,V) & (p(W,x,x) | W=x) & (
+            ((p(W,U,x) | U=y) & (p(y,V,V) | V = y)) |
+            (p(y,U,V) & V ~= y)
+        ));
+        f(x,Y) := y = Y;
+    }
+
+    # checks if x is in the function domain
+    action dom(x:carrier) returns (b:bool) = {
+	b := exists Y. p(x, Y, Y);
+    }
+
+    # returns f(x)
+    action get(x:carrier) returns (y:carrier) = {
+        # if you call get(x) and x is without a successor, you will
+        # get an arbitrary result, but not an error
+	assert dom(x);
+        assume f(x,y) | forall Z. ~p(x,Z,Z);
+    }
+
+    # set f(x) to undefined
+    action remove(x:carrier) = {
+        p(W,U,V) := p(W,U,V) & (W ~= x) & (p(W,x,x) -> p(W,V,x));
+        f(x,Y) := false;
+    }
+
+    action induction_first(x:carrier,y:carrier) returns (z:carrier) = {
+        # if x reaches y, returns f(x)
+        #
+        # formally, this is taking the minimal element of
+        # {w | w ~= y & p(x,w,y)}
+        # or x itself in case the set is empty.
+        assume p(x,y,y) -> f(x,z);
+    }
+
+    action induction_last(x:carrier,y:carrier) returns (z:carrier) = {
+        # if x reaches y, returns z s.t. f(z) = y an the acyclic path
+        # from x to y goes through z
+        #
+        # formally, this is taking the maximal element of
+        # {w | w ~= y & p(x,w,y)}
+        # or x itself in case the set is empty.
+        assume p(x,y,y) -> f(z,y) & (x=z | (p(x,z,y) & z ~= y));
+    }
+
+    action induction_cycle(x:carrier) returns (y:carrier) = {
+        # if x reaches a cycle, return the first element on the path
+        # starting at x that is on a cycle.
+        #
+        # y := c(x);
+        assume (exists W. p(x,W,W) & p(W,W,W)) -> (p(x,y,y) & p(y,y,y) & forall Z. p(x,Z,Z) & p(Z,Z,Z) -> x=y | p(x,y,Z));
+    }
+
+    action induction_join(x:carrier, y:carrier) returns (z:carrier) = {
+        # if x and y are different, mutually unreachable, and both
+        # reach some element that is not on a cycle, return the first
+        # such element; otherwise, return an arbitrary element.
+        #
+        # z := j(x,y);
+        assume x ~= y & ~p(x,y,y) & ~p(y,x,x) -> (forall U. p(x,U,U) & p(y,U,U) & ~p(U,U,U) -> p(x,z,z) & p(y,z,z) & ~p(z,z,z) & p(x,z,U) & p(y,z,U) );
+    }
+}

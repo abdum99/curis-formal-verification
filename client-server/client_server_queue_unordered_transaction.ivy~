@@ -1,0 +1,239 @@
+#lang ivy1.7
+
+# Stanford CURIS 2019-2020 Formal Verification - Lara Franciulli
+
+# CLIENT-SERVER MODEL - STAGE 2 (MODULES FOR MULTISETS)
+# This model manages connections between
+# clients and servers using no message types.
+# The main property we want to assure is that
+# no two clients are connected to a server at
+# the same time.
+# Client only receives a lock from a server if
+# if it had previously requested this lock.
+# This model allows servers to keep track of multiple
+# requests using multisets.
+# The messages in the network are also modeled
+# as multisets.
+# Multisets are encoded in modules.
+
+type client
+type server
+type idx
+type transaction
+
+# multiset of pairs
+module multiset_2(t1, t2) = {
+    type idx
+    relation r(X:t1, Y:t2, I:idx)
+
+    after init {
+	r(X,Y,I) := false;     
+    }
+    
+    action add(x:t1, y:t2) = {
+	var id:idx;
+	assume ~r(X, Y, id);
+	r(x, y, id) := true;
+    }
+    
+    action remove(x:t1, y:t2) = {
+	if some id:idx. r(x, y, id) {
+	    r(x, y, id) := false;
+	} else {
+	    assert false;
+	}
+    }
+    
+    action member(x:t1, y:t2) returns (b:bool) = {
+	b := exists I. r(x, y, I);
+    }    
+}
+
+# multiset of triples
+module multiset_3(t1, t2, t3) = {
+    type idx
+    relation r(X:t1, Y:t2, Z:t3, I:idx)
+
+    after init {
+	r(X, Y, Z, I) := false;     
+    }
+    
+    action add(x: t1, y:t2, z :t3) = {
+	var id:idx;
+	assume ~r(X, Y, Z, id);
+	r(x, y, z, id) := true;
+    }
+    
+    action remove(x:t1, y:t2, z:t3) = {
+	if some id:idx. r(x, y, z, id) {
+	    r(x, y, z, id) := false;
+	} else {
+	    assert false;
+	}
+    }
+    
+    action member(x:t1, y:t2, z:t3) returns (b:bool) = {
+	b := exists I. r(x, y, z, I);
+    }    
+}
+
+# LOCAL STATE OF SERVERS
+# true means server has the lock (= is available)
+relation semaphore(S:server)  # : server -> bool
+# multiset of request messages for server
+instantiate queue(S:server) : multiset_2(client, transaction) # : server -> N^(client x transaction)
+
+# LOCAL STATE OF CLIENTS
+# set of locks client holds
+relation holds_lock(C:client, S:server) # : client -> 2^server
+
+# STATE OF NETWORK
+# indicates if there are pending messages between clients and servers
+instantiate request_msg : multiset_3(client, server, transaction) # : N^(client x server x transaction)
+instantiate grant_msg : multiset_3(client, server, transaction) # : N^(client x server x transaction)
+instantiate release_msg : multiset_2(client, server) # : N^(client x server)
+
+# GHOST ids (for enconding multisets)
+# indicates if id was already used
+relation used(I:idx)
+
+# indicates if transaction was already initiated
+relation taken(T:transaction)
+
+# # GHOST monitor (to make sure client only receives lock if previously requested it)
+object monitor = {
+    individual a: client
+    relation started(S:server, T:transaction)
+    relation finished(S:server, T:transaction)
+    
+    after init {
+	started(S, T) := false;
+	finished(S, T) := false;
+    }
+    action request(c: client, s:server, t:transaction) = {
+	if c = a {
+	    assert ~finished(s, t);
+	    assert ~started(s, t);
+	    started(s, t) := true;
+	}
+    }
+    action receive(c: client, s:server, t:transaction) = {
+	if c = a {
+	    assert started(s, t);
+	    assert ~finished(s, t);
+	    finished(s, t) := true;
+	}
+    }
+}
+
+after init {
+    semaphore(S) := true;
+    holds_lock(C, S) := false;
+}
+
+# procedure to initialize new transaction id
+action new_transaction returns (t:transaction) = {
+    assume ~taken(t);
+    taken(t) := true;
+}
+
+# client requests lock to server
+action request_lock(c:client, s:server) = {
+    var t := new_transaction();
+    call request_msg.add(c, s, t);
+
+    call monitor.request(c, s, t);
+}
+
+export request_lock
+
+# server receives request from client and saves it
+action save_request(c:client, s:server, t:transaction) = {
+    require request_msg.member(c, s, t);
+    call queue(s).add(c, t);
+    call request_msg.remove(c, s, t);
+}
+
+export save_request
+
+# server grants lock to client 
+action grant_lock(c:client, s:server, t:transaction) = {
+    require queue(s).member(c, t);
+    require semaphore(s);
+    call queue(s).remove(c, t);
+    semaphore(s) := false;
+    call grant_msg.add(c, s, t);
+}
+
+export grant_lock
+
+# client receives lock from server
+action receive_lock(c:client, s:server, t:transaction) = {
+    require grant_msg.member(c, s, t);
+    holds_lock(c, s) := true;
+    call grant_msg.remove(c, s, t);
+
+    call monitor.receive(c, s, t);
+}
+
+export receive_lock
+
+# client returns lock to server
+action return_lock(c:client, s:server) = {
+    require holds_lock(c, s);
+    holds_lock(c, s) := false;
+    call release_msg.add(c, s);
+}
+
+export return_lock
+
+# server releases lock from client
+action release_lock(c:client, s:server) = {
+    require release_msg.member(c, s);
+    call release_msg.remove(c, s);
+    semaphore(s) := true;
+}
+
+export release_lock
+
+# INVARIANTS
+
+# no two clients associated with same server
+invariant [mutual_exclusion] forall C1, C2, S. holds_lock(C1, S) & holds_lock(C2, S) -> C1 = C2
+
+# if a client is connected to a server, the server's semaphore is dow
+invariant forall C, S. holds_lock(C, S) -> ~semaphore(S)
+
+# there is at most one grant message associated with a server
+invariant grant_msg.r(C1, S, T1, I1) & grant_msg.r(C2, S, T2, I2) -> C1 = C2 & T1 = T2 & I1 = I2
+
+# there is at most one release message associated with a sever
+invariant release_msg.r(C1, S, I1) & release_msg.r(C2, S, I2) -> C1 = C2 & I1 = I2
+
+# if there is either a grant or release message for a server, its semaphore is down
+invariant grant_msg.r(C, S, T, I1) | release_msg.r(C, S, I2) -> ~semaphore(S)
+
+# there are no grant and release message for a server at the same time
+invariant ~(release_msg.r(C1, S, I1) & grant_msg.r(C2, S, T, I2))
+
+# if a client holds lock for a server, there is no grant message for the server
+invariant ~(holds_lock(C1, S) & grant_msg.r(C2, S, T, I))
+
+# there are no client holding lock for a server and release message for same server at same time 
+invariant ~(holds_lock(C1, S) & release_msg.r(C2, S, I))
+
+# there is only stage a transaction can be at a time
+invariant ~(grant_msg.r(C, S, T, I1) & queue.r(S, C, T, I2))
+invariant ~(grant_msg.r(C, S, T, I1) & request_msg.r(C, S, T, I2))
+invariant ~(request_msg.r(C, S, T, I1) & queue.r(S, C, T, I2))
+
+# no transaction is reused
+invariant request_msg.r(C, S, T, I1) | grant_msg.r(C, S, T, I2) | queue.r(S, C, T, I) -> taken(T)
+
+# server only grants lock associated w/ pending requests
+invariant monitor.started(S, T) -> taken(T)
+invariant grant_msg.r(monitor.a, S, T, I) -> monitor.started(S, T) & ~monitor.finished(S, T)
+invariant queue.r(S, monitor.a, T, I) -> monitor.started(S, T) & ~monitor.finished(S, T)
+invariant request_msg.r(monitor.a, S, T, I) -> monitor.started(S, T) & ~monitor.finished(S, T)
+invariant monitor.finished(S, T) -> monitor.started(S, T)
+

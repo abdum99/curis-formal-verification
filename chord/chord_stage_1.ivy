@@ -1,0 +1,77 @@
+#lang ivy1.7
+
+include path_partial_function
+
+# should be the same type?
+type node
+type key
+
+# write on different file
+module multiset_1(t1) = {
+    type idx
+    relation r(X: t1, I: idx)
+    
+    after init {
+	r(X, I) := false;     
+    }
+    
+    action add(x: t1) = {
+	var id:idx;
+	assume ~r(X, id);
+	r(x, id) := true;
+    }
+    
+    action remove(x: t1) = {
+	if some id:idx. r(x, id) {
+	    r(x, id) := false;
+	} else {
+	    assert false;
+	}
+    }
+    
+    action member(x: t1) returns (b: bool) = {
+	b := exists I. r(x, I);
+    }    
+}
+
+function predecessor(N:node) : node
+instantiate keys(N:node) : multiset_1(key)
+instantiate chord_ring : path_partial_function(node)
+
+after init {
+}
+
+action join(n:node) = {
+    # make sure n is not in the Chord ring
+
+    # create new ring (if ring is empty)
+
+    # join ring by receiving a successor that is already in the ring
+
+    # receives keys from successor
+}
+
+action leave(N:node) = {
+    # make sure was in the ring
+
+    # passes keys to successor
+
+    # notifies successor it is leaving
+
+    # notifies predecessor it is leaving
+}
+
+action stabilize(n:node) = {
+    # asks n's successor for its predecessor and updates n's successor accordingly
+    var n_sucs := chord_ring.get(n);
+    var pred_of_sucs := pred(n_sucs);
+
+    if (pred_of_sucs ~= n) {
+	
+    }
+    
+    # notifies n's successor of n's existence so that it can updates its predecessor
+}
+
+
+    

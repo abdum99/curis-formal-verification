@@ -70,41 +70,42 @@ module fifo_2(t1, t2) = {
     invariant forall I. order(I, I) -> exists A, B. r(A, B, I)
 }
 
-instantiate q : fifo_2(t, t)
+# instantiate q : fifo_2(t, t)
 
-action test = {
-    assume q.empty();
+# action test = {
+#     assume q.empty();
 
-    var a:t;
-    var a2:t;
+#     var a:t;
+#     var a2:t;
 
-    # pushing first element
-    assert ~q.member(a, a2);
-    call q.push(a, a2);
-    assert q.member(a, a2);
+#     # pushing first element
+#     assert ~q.member(a, a2);
+#     call q.push(a, a2);
+#     assert q.member(a, a2);
 
-    var b:t;
-    var b2:t;
-
-    # pushing second (different) element
-    assume ~q.member(b, b2);
-    call q.push(b, b2);
-    assert q.member(b, b2);
-
-    var x:t;
-    var x2:t;
+#     var b:t;
+#     var b2:t;
+#     assume (a2 ~= b2 | a ~= b);
     
-    # removing first element
-    (x, x2) := q.pop();
-    assert a = x & a2 = x2;
-    assert ~q.member(a, a2);
+#     # pushing second (different) element
+#     assert ~q.member(b, b2);
+#     call q.push(b, b2);
+#     assert q.member(b, b2);
 
-    # removing second element
-    (x, x2) := q.pop();
-    assert b = x & b2 = x2;
-    assert ~q.member(b, b2);
+#     var x:t;
+#     var x2:t;
     
-    assert q.empty();
-}
+#     # removing first element
+#     (x, x2) := q.pop();
+#     assert a = x & a2 = x2;
+#     assert ~q.member(a, a2);
 
-export test
+#     # removing second element
+#     (x, x2) := q.pop();
+#     assert b = x & b2 = x2;
+#     assert ~q.member(b, b2);
+    
+#     assert q.empty();
+# }
+
+# export test

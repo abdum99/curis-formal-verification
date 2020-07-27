@@ -1,0 +1,351 @@
+#lang ivy1.7
+
+include fifo_queue
+
+# Stanford CURIS 2019-2020 Formal Verification - Lara Franciulli
+
+# CLIENT-SERVER MODEL - STAGE 3 (LIST OF REQUESTS)
+# This model manages connections between
+# clients and servers using no message types.
+# The model keeps track of ordered multiple
+# requests for a server.
+# The main property we want to assure is that
+# no two clients are connected to a server at
+# the same time.
+# Servers should process requests in the order
+# they were received.
+
+type client
+type server
+type transaction
+
+# multiset of pairs
+module multiset_2(t1, t2) = {
+    type idx
+    relation r(X:t1, Y:t2, I:idx)
+
+    after init {
+	r(X,Y,I) := false;     
+    }
+    
+    action add(x:t1, y:t2) = {
+	var id:idx;
+	assume ~r(X, Y, id);
+	r(x, y, id) := true;
+    }
+    
+    action remove(x:t1, y:t2) = {
+	if some id:idx. r(x, y, id) {
+	    r(x, y, id) := false;
+	} else {
+	    assert false;
+	}
+    }
+    
+    action member(x:t1, y:t2) returns (b:bool) = {
+	b := exists I. r(x, y, I);
+    }    
+}
+
+# multiset of triples
+module multiset_3(t1, t2, t3) = {
+    type idx
+    relation r(X:t1, Y:t2, Z:t3, I:idx)
+
+    after init {
+	r(X, Y, Z, I) := false;     
+    }
+    
+    action add(x: t1, y:t2, z :t3) = {
+	var id:idx;
+	assume ~r(X, Y, Z, id);
+	r(x, y, z, id) := true;
+    }
+    
+    action remove(x:t1, y:t2, z:t3) = {
+	if some id:idx. r(x, y, z, id) {
+	    r(x, y, z, id) := false;
+	} else {
+	    assert false;
+	}
+    }
+    
+    action member(x:t1, y:t2, z:t3) returns (b:bool) = {
+	b := exists I. r(x, y, z, I);
+    }    
+}
+
+# LOCAL STATE OF SERVERS
+# true means server has the lock (= is available)
+relation semaphore(S:server)  # : server -> bool
+# ordered queue of request messages for server
+instantiate queue(S:server) : fifo_2(client, transaction)
+
+# LOCAL STATE OF CLIENTS
+# set of locks client holds
+relation holds_lock(C:client, S:server) # : client -> 2^server
+
+# STATE OF NETWORK
+# indicates if there are pending messages between clients and servers
+instantiate request_msg : multiset_3(client, server, transaction) # : N^(client x server x transaction)
+instantiate grant_msg : multiset_3(client, server, transaction) # : N^(client x server x transaction)
+instantiate release_msg : multiset_2(client, server) # : N^(client x server)
+
+# GHOST
+# indicates if transaction was already initiated
+relation taken(T:transaction)
+# indicates if transaction was finished
+#relation used(T:transaction)
+
+after init {
+    semaphore(S) := true;
+    holds_lock(C, S) := false;
+    #used(T) := false;
+}
+
+# GHOST monitor (to make sure client only receives lock if previously requested it)
+object monitor = {
+    individual a: client
+    relation started(S:server, T:transaction)
+    relation finished(S:server, T:transaction)
+    
+    after init {
+	started(S, T) := false;
+	finished(S, T) := false;
+    }
+    action request(c: client, s:server, t:transaction) = {
+	if c = a {
+	    assert ~finished(s, t);
+	    assert ~started(s, t);
+	    started(s, t) := true;
+	}
+    }
+    action receive(c: client, s:server, t:transaction) = {
+	if c = a {
+	    assert started(s, t);
+	    assert ~finished(s, t);
+	    finished(s, t) := true;
+	}
+    }
+
+    # INVARIANTS
+    invariant started(S, T) -> taken(T)
+    invariant grant_msg.r(a, S, T, I) -> started(S, T) & ~finished(S, T)
+    invariant queue.r(S, a, T, I) -> started(S, T) & ~finished(S, T)
+    invariant request_msg.r(a, S, T, I) -> started(S, T) & ~finished(S, T)
+    invariant finished(S, T) -> started(S, T)
+    #invariant finished(S, T) -> used(T)
+}
+
+# GHOST monitor (requests are processed in correct order)
+object monitor_order = {
+    var s_0:server
+    var a:transaction
+    var b:transaction
+    var first:transaction
+    var second:transaction
+    
+    axiom a ~= b
+ 
+    relation saved_1
+    relation saved_2
+    relation granted_1
+    relation granted_2
+    relation first_a
+    relation first_b
+    
+    after init {
+	saved_1 := false;
+	saved_2 := false;
+	granted_1 := false;
+	granted_2 := false;
+	first_a := false;
+	first_b := false;
+    }
+    
+    action save(s: server, x:transaction) = {
+	if s = s_0 & (x = a | x = b) {
+	    if ~saved_1 {
+		assert ~granted_1;
+		assert ~saved_2;
+		assert ~granted_2;
+		saved_1 := true;
+
+		if x = a {
+		    first := a;
+		    second := b;
+		    first_a := true;
+		    first_b := false;
+		}
+		else {
+		    first := b;
+		    second := a;
+		    first_b := true;
+		    first_a := false;
+		}
+	    }
+	    else if x = second {
+		assert ~saved_2;
+		assert ~granted_2;
+		saved_2 := true;
+	    }
+	}
+    }
+    
+    action grant(s:server, x:transaction) = {
+	if s = s_0 & (x = a | x = b) {
+	    if x = first {
+		assert saved_1;
+		assert ~granted_1;
+		assert ~granted_2;
+		granted_1 := true;
+	    }
+	    else if x = second {
+		assert granted_1;
+		assert saved_2;
+		assert ~granted_2;
+		granted_2 := true;
+	    }
+	}
+    }
+
+    # INVARIANTS
+    invariant granted_1 -> saved_1
+    invariant granted_2 -> saved_2
+    invariant saved_2 -> saved_1
+    invariant granted_2 -> granted_1
+    invariant first_a -> first = a & second = b
+    invariant first_b -> first = b & second = a
+    invariant saved_1 -> (first_a | first_b)
+    
+    
+    invariant (saved_1 & ~granted_1) -> exists C, I. queue.r(s_0, C, first, I)
+    invariant (saved_2 & ~granted_2) -> exists C, I. queue.r(s_0, C, second, I)
+    invariant queue.r(s_0, C, a, I) -> saved_1
+    invariant queue.r(s_0, C, b, I) -> saved_1
+    #invariant (saved_2 & ~granted_2) <-> exists C, I. queue.r(s_0, C, second, I)
+    invariant granted_1 -> ~queue.r(s_0, C, first, I)
+    invariant granted_2 -> ~queue.r(s_0, C, second, I)
+    invariant queue.r(s_0, C1, first, I1) & queue.r(s_0, C2, second, I2) -> queue.order(s_0, I1, I2)
+    #invariant granted_1 -> used(first)
+    #invariant granted_2 -> used(second)
+}
+
+# procedure to initialize new transaction id
+action new_transaction returns (t:transaction) = {
+    assume ~taken(t);
+    taken(t) := true;
+}
+
+# client requests lock to server
+action request_lock(c:client, s:server) = {
+    var t := new_transaction();
+    call request_msg.add(c, s, t);
+
+    call monitor.request(c, s, t);
+}
+
+export request_lock
+
+# server receives request from client and saves it
+action save_request(c:client, s:server, t:transaction) = {
+    require request_msg.member(c, s, t);
+    call queue(s).push(c, t);
+    call request_msg.remove(c, s, t);
+
+    call monitor_order.save(s, t);
+}
+
+export save_request
+
+# server grants lock to client 
+action grant_lock(s:server) = {
+    require ~queue(s).empty();
+    require semaphore(s);
+    
+    var c:client;
+    var t:transaction;
+    
+    (c, t) := queue(s).pop();
+    semaphore(s) := false;
+    call grant_msg.add(c, s, t);
+    #used(t) := true;
+    
+    call monitor_order.grant(s, t);
+}
+
+export grant_lock
+
+# client receives lock from server
+action receive_lock(c:client, s:server, t:transaction) = {
+    require grant_msg.member(c, s, t);
+    holds_lock(c, s) := true;
+    call grant_msg.remove(c, s, t);
+    
+    call monitor.receive(c, s, t);
+}
+
+export receive_lock
+
+# client returns lock to server
+action return_lock(c:client, s:server) = {
+    require holds_lock(c, s);
+    holds_lock(c, s) := false;
+    call release_msg.add(c, s);
+}
+
+export return_lock
+
+# server releases lock from client
+action release_lock(c:client, s:server) = {
+    require release_msg.member(c, s);
+    call release_msg.remove(c, s);
+    semaphore(s) := true;
+}
+
+export release_lock
+
+# INVARIANTS
+
+# no two clients associated with same server
+invariant [mutual_exclusion] forall C1, C2, S. holds_lock(C1, S) & holds_lock(C2, S) -> C1 = C2
+
+# if a client is connected to a server, the server's semaphore is dow
+invariant forall C, S. holds_lock(C, S) -> ~semaphore(S)
+
+# there is at most one grant message associated with a server
+invariant grant_msg.r(C1, S, T1, I1) & grant_msg.r(C2, S, T2, I2) -> C1 = C2 & T1 = T2 & I1 = I2
+
+# there is at most one release message associated with a sever
+invariant release_msg.r(C1, S, I1) & release_msg.r(C2, S, I2) -> C1 = C2 & I1 = I2
+
+# if there is either a grant or release message for a server, its semaphore is down
+invariant grant_msg.r(C, S, T, I1) | release_msg.r(C, S, I2) -> ~semaphore(S)
+
+# there are no grant and release message for a server at the same time
+invariant ~(release_msg.r(C1, S, I1) & grant_msg.r(C2, S, T, I2))
+
+# if a client holds lock for a server, there is no grant message for the server
+invariant ~(holds_lock(C1, S) & grant_msg.r(C2, S, T, I))
+
+# there are no client holding lock for a server and release message for same server at same time 
+invariant ~(holds_lock(C1, S) & release_msg.r(C2, S, I))
+
+# TRANSACTION
+# there is only one stage a transaction can be at a time
+invariant ~(grant_msg.r(C1, S1, T, I1) & queue.r(S2, C2, T, I2))
+invariant ~(grant_msg.r(C1, S1, T, I1) & request_msg.r(C2, S2, T, I2))
+invariant ~(request_msg.r(C1, S1, T, I1) & queue.r(S2, C2, T, I2))
+
+# no transaction is reused
+#invariant used(T) -> taken(T)
+#invariant used(T) -> ~request_msg.r(C, S, T, I)
+#invariant used(T) -> ~queue.r(S, C, T, I)
+#invariant grant_msg.r(C, S, T, I) -> used(T)
+invariant grant_msg.r(C, S, T, I1) -> ~queue.r(S, C, T, I2) & ~request_msg.r(C, S, T, I3)
+invariant request_msg.r(C, S, T, I1) | grant_msg.r(C, S, T, I2) | queue.r(S, C, T, I3) -> taken(T)
+invariant request_msg.r(C1, S1, T, I1) & request_msg.r(C2, S2, T, I2) -> C1 = C2 & S1 = S2  & I1 = I2
+invariant grant_msg.r(C1, S1, T, I1) & grant_msg.r(C2, S2, T, I2) -> C1 = C2 & S1 = S2 & I1 = I2
+invariant queue.r(S1, C1, T, I1) & queue.r(S2, C2, T, I2) -> C1 = C2 & S1 = S2 & I1 = I2
+
+

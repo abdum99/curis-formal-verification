@@ -1,0 +1,117 @@
+#lang ivy1.7
+
+# using UI: succ.p(X,Y,Y) & (forall Z. succ.p(X,Z,Z) -> succ.p(X,Y,Z))
+
+include path_partial_function
+include ring
+
+type id
+
+relation active(X:id)
+instantiate succ: path_partial_function(id)
+instantiate id_ring : ring(id)
+
+var root:id
+
+after init {
+    call succ.set(root, root);
+    active(X) := X = root;
+}
+
+var a:id
+invariant active(a) -> exists Y. succ.p(a, Y, Y)
+
+action get_succ(a:id) returns (r:id) =  {
+    assert active(a);
+    assume succ.dom(a);
+    r := succ.get(a);
+    assert active(r);
+}
+
+action join(x:id, y:id) = {
+    # make sure x is not in the Chord ring
+    require ~active(x);
+    require active(y);
+    
+    var s := get_succ(y);
+    require s = y | id_ring.btw(y, x, s); # note: we should ensure it is joining in the correct place; can't rely on stabilize to take take of it because then will lead to a bug (example: root, b joins with a as successor, c joins with b as successor -> bug when b stabilizes if ring:a-b-c)
+   
+    call succ.set(x, s);
+
+    active(x) := true;
+}
+
+export join
+
+action get_pred(a:id) returns(b:id) = {
+    assert active(a);
+    assume succ.dom(b);
+    assume a = get_succ(b);
+    assert active(b);
+}
+
+action stabilize(x:id) = {
+    require active(x);
+    var s := get_succ(x);
+    var p := get_pred(s);
+    
+    # asks x's successor for its predecessor and updates x's successor accordingly
+    if id_ring.btw(x, p, s) | x = s { # corner cases: x = y (no change), y = s (no change), or x = s (any other node is better than yourself)
+	call succ.remove(x);
+    	call succ.set(x, p);
+    };
+}
+
+export stabilize
+
+# SPECIFICATION
+
+# there can't be two or more independent circles
+invariant forall X, Y. active(X) & active(Y) & succ.p(X, X, X) -> succ.p(Y, X, X)
+
+# INVARIANTS
+
+# succ relations hold only between active nodes
+invariant succ.p(X, Y, Y) -> active(X)
+invariant succ.p(X, Y, Y) -> active(Y)
+
+# root is always active and always has succ/pred
+invariant active(root)
+
+# root can reach itself
+invariant succ.p(root, root, root)
+
+# root is reachable from every active node
+invariant active(X) -> succ.p(X, root, root)
+
+# succ relations follow btw relations (wrong)
+# invariant succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z -> id_ring.btw(X, Y, Z)
+# counter-example: btw(0, 1, 2); 1 joins, 2 joins, 2 stab, 0 joins, 0 stb, 1 stab -> we have (2, 1) as an edge that violates the invariant
+#invariant succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z & succ.p(X, X, X) -> id_ring.btw(X, Y, Z)
+#      invariant succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z & pred(Z, X) -> id_ring.btw(X, Y, Z) # got from chord10.dot
+
+# MAYBE
+
+#     invariant pred(X, Y) -> succ.p(Y, X, X)
+
+# invariant X ~= Y & X ~= Z & Y ~= Z & pred(X, Y) & succ.p(Y, Z, Z) & ~succ.p(X, Z, Z) -> id_ring.btw(Y, Z, X)
+#invariant pred(X, Y) & id_ring.btw(X, Z, Y) & succ.p(Y, Z, Z) -> succ.p(X, Z, Z)
+
+# think about how pred relates to btw and succ
+
+# only the root has itself as its own predecessor
+#     invariant pred(X, X) -> X = root
+#invariant succ.p(X, X, X) & ~succ.p(Y, X, X) & X ~= Y & active(Y) -> X = root
+
+
+# if Y is reachable from X, then: succ.f(X, Y) or exists Z. succ.p(X, Z, Y)
+
+
+
+
+#invariant succ.p(X, Y, Z) -> id_ring.btw(X, Y, Z)
+
+
+
+
+    
