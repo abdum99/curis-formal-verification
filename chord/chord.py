@@ -6,75 +6,6 @@ from collections import defaultdict
 from itertools import chain
 from ast import literal_eval
 
-# st = """
-#     id_ring.btw(0,1,2) = true
-#     id_ring.btw(1,2,0) = true
-#     id_ring.btw(2,0,1) = true
-#     id_ring.btw(0,0,0) = false
-#     id_ring.btw(0,0,1) = false
-#     id_ring.btw(0,0,2) = false
-#     id_ring.btw(0,1,0) = false
-#     id_ring.btw(0,1,1) = false
-#     id_ring.btw(0,2,0) = false
-#     id_ring.btw(0,2,1) = false
-#     id_ring.btw(0,2,2) = false
-#     id_ring.btw(1,0,0) = false
-#     id_ring.btw(1,0,1) = false
-#     id_ring.btw(1,0,2) = false
-#     id_ring.btw(1,1,0) = false
-#     id_ring.btw(1,1,1) = false
-#     id_ring.btw(1,1,2) = false
-#     id_ring.btw(1,2,1) = false
-#     id_ring.btw(1,2,2) = false
-#     id_ring.btw(2,0,0) = false
-#     id_ring.btw(2,0,2) = false
-#     id_ring.btw(2,1,0) = false
-#     id_ring.btw(2,1,1) = false
-#     id_ring.btw(2,1,2) = false
-#     id_ring.btw(2,2,0) = false
-#     id_ring.btw(2,2,1) = false
-#     id_ring.btw(2,2,2) = false
-#     active(0) = true
-#     active(1) = true
-#     active(2) = true
-#     pred(0,2) = true
-#     pred(2,0) = true
-#     pred(0,0) = false
-#     pred(0,1) = false
-#     pred(1,0) = false
-#     pred(1,1) = false
-#     pred(1,2) = false
-#     pred(2,1) = false
-#     pred(2,2) = false
-#     succ.p(0,0,0) = true
-#     succ.p(1,0,0) = true
-#     succ.p(2,0,0) = true
-#     succ.p(2,1,0) = true
-#     succ.p(2,1,1) = true
-#     succ.p(0,0,1) = false
-#     succ.p(0,0,2) = false
-#     succ.p(0,1,0) = false
-#     succ.p(0,1,1) = false
-#     succ.p(0,1,2) = false
-#     succ.p(0,2,0) = false
-#     succ.p(0,2,1) = false
-#     succ.p(0,2,2) = false
-#     succ.p(1,0,1) = false
-#     succ.p(1,0,2) = false
-#     succ.p(1,1,0) = false
-#     succ.p(1,1,1) = false
-#     succ.p(1,1,2) = false
-#     succ.p(1,2,0) = false
-#     succ.p(1,2,1) = false
-#     succ.p(1,2,2) = false
-#     succ.p(2,0,1) = false
-#     succ.p(2,0,2) = false
-#     succ.p(2,1,2) = false
-#     succ.p(2,2,0) = false
-#     succ.p(2,2,1) = false
-#     succ.p(2,2,2) = false
-# """
-
 def ivy_trace_to_dot(lines):
     
     # find root
@@ -95,16 +26,27 @@ def ivy_trace_to_dot(lines):
     N = 1 + max(u for tup in chain(*relations.values()) for u in tup)
     # print(f'N = {N}')
 
+    # renaming nodes
+    btw_list = [root_value]
+    while len(btw_list) < N:
+        a = btw_list[-1]  
+        for b in range(N):
+            if all((a,b,c) in relations['id_ring.btw'] or a == c or b == c for c in range(N)):
+                btw_list.append(b)
+                break
+        else:
+            assert False
+    print(btw_list)
+ 
     dot = """
     digraph G {
     """
-
     # active nodes
     for tup in relations['active']:
         for u in tup:
-            dot += f'{u} [color=red]\n'
+            dot += f'{btw_list.index(u)} [color=red]\n'
             if u is root_value:
-                dot += f'{u} [style=filled]\n'
+                dot += f'{btw_list.index(u)} [style=filled]\n'
 
     # successors (edges)
     reachable = defaultdict(set)
@@ -128,16 +70,17 @@ def ivy_trace_to_dot(lines):
             # count = len(c for c in reachable[a] if (b,c) in pair[a])
             # if count == len(reachable[a]):
             if all((b,c) in pair[a] for c in reachable[a]):    
-                dot += f'{a} -> {b} [style=filled]\n'
+                dot += f'{btw_list.index(a)} -> {btw_list.index(b)} [style=filled]\n'
                 break
         else:
             assert len(reachable[a]) == 0, a
 
     # predecessors
     for u, v in relations['pred']:
-        dot += f'{u} -> {v} [style=dashed]\n'
+        dot += f'{btw_list.index(u)} -> {btw_list.index(v)} [style=dashed]\n'
 
     dot += """
+
     }
     """
 
@@ -148,7 +91,7 @@ if __name__ == '__main__':
     ivy_output = subprocess.check_output(['ivy_check', 'trace=true', sys.argv[1]], universal_newlines=True)
     print(ivy_output)
     ivy_lines = [l.strip() for l in ivy_output.splitlines()]
-    
+            
     try:
         i = ivy_lines.index('searching for a small model... done')
         ivy_lines = ivy_lines[i + 2:]
@@ -163,4 +106,4 @@ if __name__ == '__main__':
             file_name = input('Name of file: ')
             subprocess.run(['cp', 'chord.png', file_name.strip()])
     except ValueError:
-        print("Ivy verified model!")
+        print("Check output")
