@@ -25,7 +25,7 @@ action get_succ(a:id) returns (r:id) =  {
     assert active(a);
     assume succ.dom(a);
     r := succ.get(a);
-    assert active(r);
+    #assert active(r);
 }
 
 action join(x:id, y:id) = {
@@ -44,10 +44,8 @@ action join(x:id, y:id) = {
 export join
 
 action get_pred(a:id) returns(b:id) = {
-    assert active(a);
     assume succ.dom(b);
-    assume a = get_succ(b);
-    assert active(b);
+    assume a = succ.get(b);
 }
 
 action stabilize(x:id) = {
@@ -75,6 +73,9 @@ invariant forall X, Y. active(X) & active(Y) & succ.p(X, X, X) -> succ.p(Y, X, X
 invariant succ.p(X, Y, Y) -> active(X)
 invariant succ.p(X, Y, Y) -> active(Y)
 
+# if three nodes are on a cycle, they should follow btw relations
+invariant succ.p(X, Y, Z) & succ.p(X, X, X) & X ~= Y & X ~= Z & Y ~= Z -> id_ring.btw(X, Y, Z)
+
 # root is always active and always has succ/pred
 invariant active(root)
 
@@ -83,33 +84,6 @@ invariant succ.p(root, root, root)
 
 # root is reachable from every active node
 invariant active(X) -> succ.p(X, root, root)
-
-# succ relations follow btw relations (wrong)
-# invariant succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z -> id_ring.btw(X, Y, Z)
-# counter-example: btw(0, 1, 2); 1 joins, 2 joins, 2 stab, 0 joins, 0 stb, 1 stab -> we have (2, 1) as an edge that violates the invariant
-#invariant succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z & succ.p(X, X, X) -> id_ring.btw(X, Y, Z)
-#      invariant succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z & pred(Z, X) -> id_ring.btw(X, Y, Z) # got from chord10.dot
-
-# MAYBE
-
-#     invariant pred(X, Y) -> succ.p(Y, X, X)
-
-# invariant X ~= Y & X ~= Z & Y ~= Z & pred(X, Y) & succ.p(Y, Z, Z) & ~succ.p(X, Z, Z) -> id_ring.btw(Y, Z, X)
-#invariant pred(X, Y) & id_ring.btw(X, Z, Y) & succ.p(Y, Z, Z) -> succ.p(X, Z, Z)
-
-# think about how pred relates to btw and succ
-
-# only the root has itself as its own predecessor
-#     invariant pred(X, X) -> X = root
-#invariant succ.p(X, X, X) & ~succ.p(Y, X, X) & X ~= Y & active(Y) -> X = root
-
-
-# if Y is reachable from X, then: succ.f(X, Y) or exists Z. succ.p(X, Z, Y)
-
-
-
-
-#invariant succ.p(X, Y, Z) -> id_ring.btw(X, Y, Z)
 
 
 
