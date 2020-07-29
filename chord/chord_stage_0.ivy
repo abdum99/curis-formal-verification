@@ -33,10 +33,10 @@ action join(x:id, y:id) = {
     require ~active(x);
     require active(y);
     
-    var s := get_succ(y);
-    require s = y | id_ring.btw(y, x, s); # note: we should ensure it is joining in the correct place; can't rely on stabilize to take take of it because then will lead to a bug (example: root, b joins with a as successor, c joins with b as successor -> bug when b stabilizes if ring:a-b-c)
+    #var s := get_succ(y);
+    #require s = y | id_ring.btw(y, x, s); # note: we should ensure it is joining in the correct place; can't rely on stabilize to take take of it because then will lead to a bug (example: root, b joins with a as successor, c joins with b as successor -> bug when b stabilizes if ring:a-b-c)
    
-    call succ.set(x, s);
+    call succ.set(x, y);
 
     active(x) := true;
 }
