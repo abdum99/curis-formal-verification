@@ -6,7 +6,7 @@ from collections import defaultdict
 from itertools import chain
 from ast import literal_eval
 
-def ivy_trace_to_dot(lines):
+def ivy_trace_to_dot(lines, action):
     
     # find root
     root = [l.split('=')[-1] for l in lines if l.startswith('root = ')]
@@ -41,12 +41,20 @@ def ivy_trace_to_dot(lines):
     dot = """
     digraph G {
     """
+    # print action
+    node_action = [l.split('=')[-1] for l in action if l.startswith('fml')]
+    node_value = literal_eval(node_action[0].strip())
+    action = action[0].split(' ')[-1]
+    dot += f'label = {action}\n'
+    
     # active nodes
     for tup in relations['active']:
         for u in tup:
-            dot += f'{btw_list.index(u)} [color=red]\n'
+            dot += f'{btw_list.index(u)} [color=green]\n'
             if u is root_value:
                 dot += f'{btw_list.index(u)} [style=filled]\n'
+            if u is node_value:
+                 dot += f'{btw_list.index(u)} [color=red]\n'
 
     # successors (edges)
     reachable = defaultdict(set)
@@ -96,8 +104,9 @@ if __name__ == '__main__':
         i = ivy_lines.index('searching for a small model... done')
         ivy_lines = ivy_lines[i + 2:]
         i = ivy_lines.index(']')
+        violation_action = ivy_lines[i + 1:-1]
         ivy_lines = ivy_lines[:i]
-        dot = ivy_trace_to_dot(ivy_lines)
+        dot = ivy_trace_to_dot(ivy_lines, violation_action)
         open('chord.dot', 'w').write(dot)
         subprocess.run(['dot', '-Tpng', 'chord.dot', '-o',  'chord.png'])
         subprocess.run(['display', 'chord.png'])
