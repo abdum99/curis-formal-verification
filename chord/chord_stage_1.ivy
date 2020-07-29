@@ -1,7 +1,5 @@
 #lang ivy1.7
 
-# using UI: succ.p(X,Y,Y) & (forall Z. succ.p(X,Z,Z) -> succ.p(X,Y,Z))
-
 include path_partial_function
 include ring
 
@@ -36,11 +34,12 @@ action join(x:id, y:id) = {
     require ~active(x);
     require active(y);
     
-    var s := get_succ(y);
-    # require s = y | id_ring.btw(y, x, s);
-    require id_ring.btw(y, x, s); # note: we should ensure it is joining in the correct place; can't rely on stabilize to take take of it because then will lead to a bug (example: root, b joins with a as successor, c joins with b as successor -> bug when b stabilizes if ring:a-b-c)
-   
-    call succ.set(x, s);
+    #var s := get_succ(y);
+    #require s = y | id_ring.btw(y, x, s);
+    #require id_ring.btw(y, x, s); # note: we should ensure it is joining in the correct place; can't rely on stabilize to take take of it because then will lead to a bug (example: root, b joins with a as successor, c joins with b as successor -> bug when b stabilizes if ring:a-b-c)
+
+    # not sure if it faithfully captures the model (in the model, node joins in the successor)
+    call succ.set(x, y);
 
     # joins with no predecessor
     assert ~pred(x, Y);
@@ -49,25 +48,6 @@ action join(x:id, y:id) = {
 }
 
 export join
-
-# action leave(x:id) = {
-#     # make sure was in the ring
-#     assert succ.dom(x);
-
-#     var s := succ.get(x);
-	
-#     # notifies successor it is leaving
-#     pred(s) := pred(x);
-#     pred(s, pred_x) := true;
-    
-#     # notifies predecessor it is leaving
-#     call succ.set(pred_x, s);
-
-#     # leaves
-#     call succ.remove(x);
-# }
-
-#export leave
 
 action stabilize(x:id) = {
     require active(x);
@@ -102,21 +82,17 @@ export stabilize
 # there can't be two or more independent circles
 invariant forall X, Y. active(X) & active(Y) & succ.p(X, X, X) -> succ.p(Y, X, X)
 
-# INVARIANTS
-
-# every node in the network has an unique predecessor
-invariant pred(X, Y) & pred(X, Z) -> Y = Z
-
-# only active nodes can be each other predecessors (since there are no failures)
-# invariant pred(X, Y) -> active(X) & active(Y)
+# INVARIANTS from stage 0
 
 # succ relations hold only between active nodes
 invariant succ.p(X, Y, Y) -> active(X)
 invariant succ.p(X, Y, Y) -> active(Y)
 
+# if three nodes are on a cycle, they should follow btw relations
+invariant succ.p(X, Y, Z) & succ.p(X, X, X) & X ~= Y & X ~= Z & Y ~= Z -> id_ring.btw(X, Y, Z)
+
 # root is always active and always has succ/pred
 invariant active(root)
-invariant exists Y. pred(root, Y)
 
 # root can reach itself
 invariant succ.p(root, root, root)
@@ -124,87 +100,46 @@ invariant succ.p(root, root, root)
 # root is reachable from every active node
 invariant active(X) -> succ.p(X, root, root)
 
-# MAYBE too strong
-invariant succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z & pred(Z, X) -> id_ring.btw(X, Y, Z) # got from chord10.dot
+# INVARIANTS about the predecessor
 
-# WRONG: succ relations follow btw relations
-#invariant succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z -> id_ring.btw(X, Y, Z) # possible counterexample: chord12
-# counter-example: btw(0, 1, 2); 1 joins, 2 joins, 2 stab, 0 joins, 0 stb, 1 stab -> we have (2, 1) as an edge that violates the invariant
+# every node in the network has an unique predecessor
+invariant pred(X, Y) & pred(X, Z) -> Y = Z
 
-# MAYBE:
+# only active nodes can be each other predecessors (since there are no failures)
+invariant pred(X, Y) -> active(X) & active(Y)
 
+# root is always active and always has predecessor
+invariant exists Y. pred(root, Y)
+
+# pred can reach node (reachability only increases in protocol without failures)
 invariant pred(X, Y) -> succ.p(Y, X, X)
 
-# only the root has itself as its own predecessor
-invariant pred(X, X) -> X = root
-#invariant succ.p(X, X, X) & ~succ.p(Y, X, X) & X ~= Y & active(Y) -> X = root
+# INVARIANTS relating pred with btw
+invariant succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z & pred(Z, X) -> id_ring.btw(X, Y, Z) # got from chord10.dot
+# the nodes in the path between a node and its predecessor obey to the btw relation  
+#invariant forall P, N, X, Y, Z. pred(N, P) & succ.p(P, X, N) & succ.p(P, Y, N) & succ.p(P, Z, N) & succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z -> id_ring.btw(X, Y, Z) # correct, but use 5 quant, which makes ivy slow (next inv uses only 4 and is correct)
+#invariant forall P, N, X, Y. pred(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & X ~= Y & X ~= P & Y ~= P & N ~= X & N ~= Y-> id_ring.btw(P, X, Y) # got from chord14.dot
+invariant pred(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & ~succ.p(N, Y, X) & X ~= Y & X ~= P & Y ~= P -> id_ring.btw(P, X, Y) # got from chord15.dot
 
-#invariant pred(X, Y) & id_ring.btw(X, Z, Y) & succ.p(Y, Z, Z) -> succ.p(X, Z, Z)
+# INVARIANTS that are correct, but file verifies without them
 
-invariant succ.p(X, Y, Y) & succ.p(Y, X, X) & succ.p(Z, X, X) & ~succ.p(Z, Y, Y) & ~succ.p(X, Z, Z) & X ~= Y & X ~= Z & Y ~= Z -> ~id_ring.btw(X, Z, Y) # no effect
+# (correct, but file verifies without it) only the root has itself as its own predecessor
+# invariant pred(X, X) -> X = root
 
-# WRONG: invariant succ.p(Y, X, X) & id_ring.btw(X, Y, Z) -> succ.p(X, Y, Y) # from chord12 (can't have root as its own successor)
-# counterexample: chord13 and 1 joins
-########################################################################################
-# # SPECIFICATION
+# (correct, but file verifies without it)
+# invariant pred(X, Y) & id_ring.btw(X, Z, Y) & succ.p(Y, Z, Z) -> succ.p(X, Z, Z)
 
-# # there can't be two or more independent circles
-# #  invariant forall X, Y. active(X) & active(Y) & succ.p(X, X, X) -> succ.p(Y, X, X)
+# (correct, but file verifies without it)
+# invariant X ~= Y & X ~= Z & Y ~= Z & pred(X, Y) & succ.p(Y, Z, Z) & ~succ.p(X, Z, Z) -> id_ring.btw(Y, Z, X)
+# invariant pred(X, Y) & id_ring.btw(X, Z, Y) & succ.p(Y, Z, Z) -> succ.p(X, Z, Z)
 
-# # INVARIANTS
-
-# # every node in the network has an unique predecessor
-# invariant pred(X, Y) & pred(X, Z) -> Y = Z
-
-# # only active nodes can be each other predecessors (since there are no failures)
-# invariant pred(X, Y) -> active(X) & active(Y)
-
-# # succ relations hold only between active nodes
-# invariant succ.p(X, Y, Y) -> active(X)
-# invariant succ.p(X, Y, Y) -> active(Y)
-
-# # root is always active and always has succ/pred
-# invariant active(root)
-# invariant exists Y. pred(root, Y)
-
-# # root can reach itself
-# invariant succ.p(root, root, root)
-
-# # root is reachable from every active node
-# invariant active(X) -> succ.p(X, root, root)
-
-# # succ relations follow btw relations (wrong)
-# # invariant succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z -> id_ring.btw(X, Y, Z)
-# # counter-example: btw(0, 1, 2); 1 joins, 2 joins, 2 stab, 0 joins, 0 stb, 1 stab -> we have (2, 1) as an edge that violates the invariant
-# #invariant succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z & succ.p(X, X, X) -> id_ring.btw(X, Y, Z)
-# #     invariant succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z & pred(Z, X) -> id_ring.btw(X, Y, Z) # got from chord10.dot
-
-# # if node is reachable from root, it should have a predecessor
-# #invariant forall succ.p(root, X, X) -> pred(X, Y) # from chord11 btw(0, 1, 4, 2, 3)
-
-# # if node is reachable from root, its predecessor is also reachable from root
-# #invariant succ.p(root, X, X) & pred(X, Y) -> succ.p(root, Y, Y) # from chord11 btw(0, 1, 4, 2, 3)
-
-# # MAYBE:
-
-# #   invariant pred(X, Y) -> succ.p(Y, X, X)
-
-# # invariant X ~= Y & X ~= Z & Y ~= Z & pred(X, Y) & succ.p(Y, Z, Z) & ~succ.p(X, Z, Z) -> id_ring.btw(Y, Z, X)
-# #invariant pred(X, Y) & id_ring.btw(X, Z, Y) & succ.p(Y, Z, Z) -> succ.p(X, Z, Z)
-
-# # think about how pred relates to btw and succ
-
-# # only the root has itself as its own predecessor
-# #   invariant pred(X, X) -> X = root
-# #invariant succ.p(X, X, X) & ~succ.p(Y, X, X) & X ~= Y & active(Y) -> X = root
-
-
-# # if Y is reachable from X, then: succ.f(X, Y) or exists Z. succ.p(X, Z, Y)
+# (correct, but file verifies without it)
+# invariant succ.p(X, X, X) & ~succ.p(Y, X, X) & X ~= Y & active(Y) -> X = root
 
 
 
 
-# #invariant succ.p(X, Y, Z) -> id_ring.btw(X, Y, Z)
+
 
 
 
