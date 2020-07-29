@@ -34,7 +34,7 @@
 
 module path_partial_function(carrier) = {
     relation p(X:carrier,Y:carrier,Z:carrier)  # paths in the function graph
-    relation f(X:carrier,Y:carrier)  # the function edges
+    # relation f(X:carrier,Y:carrier)  # the function edges
 
     # Conjectures that ensure that p really describes the paths in the
     # function graph. These conjectures form part of the safety
@@ -59,7 +59,7 @@ module path_partial_function(carrier) = {
     # reduction of p. f would be defined by:
     # f(x,y) <-> p(x,y,y) & (forall z. (p(x,z,z) -> p(x,y,z)))
     # The following conjecture is the -> direction:
-    invariant f(X,Y) -> (p(X,Y,Y) & (p(X,Z,Z) -> p(X,Y,Z)))
+    # invariant f(X,Y) -> (p(X,Y,Y) & (p(X,Z,Z) -> p(X,Y,Z)))
     # invariant forall X,Y. (p(X,Y,Y) & (forall Z. (p(X,Z,Z) -> p(X,Y,Z)))) -> f(X,Y) # this creates a cycle
     # The other direction is AE that breaks the inversion lemma
     # (infinite model etc.), so it's only provided as an induction
@@ -68,19 +68,19 @@ module path_partial_function(carrier) = {
     # initially empty - f(x) is undefined anywhere
     after init {
 	p(X,Y,Z) := false;
-	f(X,Y) := false;
+	# f(X,Y) := false;
     }
 
     # updates f(x) to receive y
     action set(x:carrier,y:carrier) = {
 	assert ~dom(x);
-        #call remove(x);
+	#call remove(x);
         p(W,U,V) := (
             p(W,U,V) |  ~p(W,V,V) & (p(W,x,x) | W=x) & (
             ((p(W,U,x) | U=y) & (p(y,V,V) | V = y)) |
             (p(y,U,V) & V ~= y)
         ));
-        f(x,Y) := y = Y;
+        # f(x,Y) := y = Y;
     }
 
     # checks if x is in the function domain
@@ -93,13 +93,16 @@ module path_partial_function(carrier) = {
         # if you call get(x) and x is without a successor, you will
         # get an arbitrary result, but not an error
 	assert dom(x);
-        assume f(x,y) | forall Z. ~p(x,Z,Z);
+	#assume p(x,y,y) & ((x ~= y & forall Z. (p(x, Z, Z) -> p(x, y, Z))) | (x = y & forall Y, Z. p(x, Y, Z) -> x = Y & x = Z))
+	assume p(x, y, y) & (forall Z. (p(x, Z, Z) -> p(x, y, Z)));	
+        # assume f(x,y) | forall Z. ~p(x,Z,Z);
     }
 
     # set f(x) to undefined
     action remove(x:carrier) = {
+	assert dom(x);
         p(W,U,V) := p(W,U,V) & (W ~= x) & (p(W,x,x) -> p(W,V,x));
-        f(x,Y) := false;
+        # f(x,Y) := false;
     }
 
     action induction_first(x:carrier,y:carrier) returns (z:carrier) = {
@@ -108,7 +111,7 @@ module path_partial_function(carrier) = {
         # formally, this is taking the minimal element of
         # {w | w ~= y & p(x,w,y)}
         # or x itself in case the set is empty.
-        assume p(x,y,y) -> f(x,z);
+        # assume p(x,y,y) -> f(x,z);
     }
 
     action induction_last(x:carrier,y:carrier) returns (z:carrier) = {
@@ -118,7 +121,8 @@ module path_partial_function(carrier) = {
         # formally, this is taking the maximal element of
         # {w | w ~= y & p(x,w,y)}
         # or x itself in case the set is empty.
-        assume p(x,y,y) -> f(z,y) & (x=z | (p(x,z,y) & z ~= y));
+
+	# assume p(x,y,y) -> f(z,y) & (x=z | (p(x,z,y) & z ~= y));
     }
 
     action induction_cycle(x:carrier) returns (y:carrier) = {
