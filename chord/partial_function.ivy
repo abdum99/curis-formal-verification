@@ -25,7 +25,7 @@ module partial_function(carrier) = {
     # returns f(x)
     action get(x:carrier) returns (y:carrier) = {
 	assert dom(x);	
-        assume r(x, Y) = Y = y;
+        assume r(x, y) & forall Z. y ~= Z -> ~r(x, Z);
     }
 
     # set f(x) to undefined
