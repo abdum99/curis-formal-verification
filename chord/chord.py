@@ -6,25 +6,28 @@ from collections import defaultdict
 from itertools import chain
 from ast import literal_eval
 
-def ivy_trace_to_dot(lines, action):
+def ivy_trace_to_dot(pre_state, action):
     
     # find root
-    root = [l.split('=')[-1] for l in lines if l.startswith('root = ')]
+    root = [l.split('=')[-1] for l in pre_state if l.startswith('root = ')]
     root_value = literal_eval(root[0].strip())
 
-    lines = [l.split()[0] for l in lines if l.endswith(' = true')]
-    # print(lines)
-
+    # identify nodes that violate invariant
+    inv_var = [l.split('=')[0].strip() for l in pre_state if l.startswith('@')]
+    inv_var = [x for x in inv_var]
+    inv_nodes = [l.split('=')[-1].strip() for l in pre_state if l.startswith('@')]
+    inv_nodes = [literal_eval(x) for x in inv_nodes]
+        
+    # get relations
+    pre_state = [l.split()[0] for l in pre_state if l.endswith(' = true')]
     relations = defaultdict(set)
-    for l in lines:
+    for l in pre_state:
         assert '(' in l, l
         i = l.find('(')
         relations[l[:i]].add(literal_eval(l[i:-1] + ',)'))
-    # print(relations)
-
+    
     # number of nodes in system
     N = 1 + max(u for tup in chain(*relations.values()) for u in tup)
-    # print(f'N = {N}')
 
     # renaming nodes
     btw_list = [root_value]
@@ -37,25 +40,39 @@ def ivy_trace_to_dot(lines, action):
         else:
             assert False
     print(btw_list)
- 
+
+    root_value = btw_list.index(root_value)
+    
     dot = """
     digraph G {
     """
     # print action
-    node_action = [l.split('=')[-1] for l in action if l.startswith('fml')]
-    node_value = literal_eval(node_action[0].strip())
-    action = action[0].split(' ')[-1]
-    dot += f'label = {action}\n'
-    
+    fmls = [l.split('=')[-1].strip() for l in action[:action.index(']')] if l.startswith('fml')]
+    fmls = tuple(btw_list.index(literal_eval(x)) for x in fmls)
+    call, action_name = action[0].split()
+    assert call == 'call', call
+    dot += f'label = "{action_name}{fmls}"\n'
+    for u in fmls:
+        dot += f'{u} [style=filled]\n'
+                
     # active nodes
     for tup in relations['active']:
         for u in tup:
             dot += f'{btw_list.index(u)} [color=green]\n'
-            if u is root_value:
-                dot += f'{btw_list.index(u)} [style=filled]\n'
-            if u is node_value:
-                 dot += f'{btw_list.index(u)} [color=red]\n'
+            if btw_list.index(u) is root_value:
+                dot += f'{btw_list.index(u)} [label="{btw_list.index(u)}\nroot"]\n'
 
+    # computing labels to each node
+    label = ['root\n' if x == root_value else ' ' for x in range(N)]
+    for i in range(len(inv_nodes)):
+        u = btw_list.index(inv_nodes[i])
+        label[u] += str(inv_var[i]) + '\n'
+    
+    # writing label to nodes that violate inv
+    for u in inv_nodes:
+        i = inv_nodes.index(u)
+        dot += f'{btw_list.index(u)} [label="{btw_list.index(u)}\n {label[btw_list.index(u)]}"]'
+            
     # successors (edges)
     reachable = defaultdict(set)
     pair = defaultdict(set)
@@ -95,24 +112,27 @@ def ivy_trace_to_dot(lines, action):
     return dot
 
 if __name__ == '__main__':
-    #ivy_output = subprocess.check_output(['ivy_check', 'trace=true', sys.argv[1]], encoding='UTF-8')
-    ivy_output = subprocess.check_output(['ivy_check', 'trace=true', sys.argv[1]], universal_newlines=True)
+    ivy_original_output = subprocess.check_output(['ivy_check', 'trace=true', sys.argv[1]], universal_newlines=True)
+    ivy_output = ivy_original_output
     print(ivy_output)
-    ivy_lines = [l.strip() for l in ivy_output.splitlines()]
+    ivy_output = [l.strip() for l in ivy_output.splitlines()]
             
     try:
-        i = ivy_lines.index('searching for a small model... done')
-        ivy_lines = ivy_lines[i + 2:]
-        i = ivy_lines.index(']')
-        violation_action = ivy_lines[i + 1:-1]
-        ivy_lines = ivy_lines[:i]
-        dot = ivy_trace_to_dot(ivy_lines, violation_action)
+        i = ivy_output.index('searching for a small model... done')
+        ivy_output = ivy_output[i + 2:]
+        i = ivy_output.index(']')
+        violation_action = ivy_output[i + 1:-1]
+        pre_state = ivy_output[:i]
+        dot = ivy_trace_to_dot(pre_state, violation_action)
         open('chord.dot', 'w').write(dot)
-        subprocess.run(['dot', '-Tpng', 'chord.dot', '-o',  'chord.png'])
-        subprocess.run(['display', 'chord.png'])
+        open('chord_output.txt', 'w').write(ivy_original_output)
+        subprocess.check_call(['display', 'chord.dot'])
         save_file = str(input('Save counter example to newfile?(y/n): ')).lower().strip()
         if save_file[0] == 'y':
             file_name = input('Name of file: ')
-            subprocess.run(['cp', 'chord.png', file_name.strip()])
+            file_name_dot = file_name + '.dot'
+            subprocess.check_call(['cp', 'chord.dot', file_name_dot.strip()])
+            file_name_output = file_name + '_ivy_output.txt'
+            subprocess.check_call(['cp', 'chord_output.txt', file_name_output.strip()])
     except ValueError:
         print("Check output")
