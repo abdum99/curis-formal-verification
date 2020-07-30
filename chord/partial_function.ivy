@@ -1,0 +1,38 @@
+#lang ivy1.7
+
+# An Ivy module for a partial function graph
+
+
+module partial_function(carrier) = {
+    relation r(X:carrier, Y:carrier)
+
+    # initially empty - f(x) is undefined anywhere
+    after init {
+	r(X, Y) := false;
+    }
+
+    # updates f(x) to receive y
+    action set(x:carrier, y:carrier) = {
+	assert ~dom(x);
+        r(x, y) := true;
+    }
+
+    # checks if x is in the function domain
+    action dom(x:carrier) returns (b:bool) = {
+	b := exists Y. r(x, Y);
+    }
+
+    # returns f(x)
+    action get(x:carrier) returns (y:carrier) = {
+	assert dom(x);	
+        assume r(x, y) & forall Z. ~r(x, Z);
+    }
+
+    # set f(x) to undefined
+    action remove(x:carrier) = {
+	assert dom(x);
+        r(x, Y) := false;
+    }
+
+    invariant r(X, Y) & r(X, Z) -> Y = Z
+}
