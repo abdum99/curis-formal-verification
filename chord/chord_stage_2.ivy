@@ -1,0 +1,194 @@
+#lang ivy1.7
+
+include ring
+include partial_function
+
+type id
+
+relation active(X:id)
+relation failed(X:id)
+instantiate pred: partial_function(id, id)
+instantiate succ_1: partial_function(id, id)
+instantiate succ_2: partial_function(id, id)
+instantiate id_ring : ring(id)
+
+var root:id
+
+after init {
+    call pred.set(root, root);
+    call succ_1.set(root, root);
+    call succ_2.set(root, root);
+    active(X) := X = root;
+    failed(X) := false;
+}
+
+action join(x:id, y:id) = {
+    # make sure x is not in the Chord ring
+    require ~active(x);
+    require active(y);
+    require ~failed(y);
+
+    # creates succ list for x
+    call succ_1.set(x, y);
+    assert succ_1.dom(y);
+    var s_2 := succ_1.get(y);
+    call succ_2.set(x, s_2);
+    
+    # joins with no predecessor
+    assert ~pred.dom(x);
+
+    active(x) := true;
+}
+
+export join
+
+action fail(x:id) = {
+    require active(x);
+    require ~failed(x);
+    if pred.dom(x) {
+	call pred.remove(x);
+    };
+    call succ_1.remove(x);
+    call succ_2.remove(x);
+    failed(x) := true;
+}
+
+export fail
+
+# check if pred has failed
+action check_pred(x:id) = {
+    require active(x);
+    require ~failed(x);
+    require pred.dom(x);
+    if failed(pred.get(x)) {
+	call pred.remove(x);
+    };
+}
+
+export check_pred
+
+action stabilize(x:id) = {
+    require active(x);
+    require ~failed(x);
+
+    var s_1 := succ_1.get(x);
+    var s_2 := succ_2.get(x);
+   
+    # assuming we have at least one live successor (reconsider if node should fail if both successors fail)
+    assume ~failed(s_1) | ~failed(s_2);
+    
+    # checks if immediate successor is alive
+    if failed(s_1) {
+	call succ_1.remove(x);
+	call succ_1.set(x, s_2);
+    };
+
+    s_1 := succ_1.get(x);
+    assert ~failed(s_1);
+    
+    # asks x's successor for its predecessor and updates x's successor accordingly
+    if pred.dom(s_1) {
+	var y := pred.get(s_1);
+	if (id_ring.btw(x, y, s_1) | x = s_1) & ~failed(y) { # corner cases: x = y (no change), y = s (no change), or x = s (any other node is better than yourself)
+	    call succ_1.remove(x);
+    	    call succ_1.set(x, y);
+	};
+    };
+    
+    s_1 := succ_1.get(x);
+    
+    # notifies x's successor of x's existence so that it can updates its predecessor
+    if pred.dom(s_1) {
+	var z := pred.get(s_1);
+	if id_ring.btw(z, x, s_1) | s_1 = z {
+	    call pred.remove(s_1);
+    	    call pred.set(s_1, x);
+	    # corner cases: x = z (no change), x = s (no change), or
+	    # z = s (since x's successor is correct, we know there is no node between x and s -> x is s's predecessor in the ring)
+	};
+    } else {
+	call pred.set(s_1, x);
+    };
+
+    # updates x's successors list
+    s_2 := succ_1.get(s_1);
+    call succ_2.remove(x);
+    call succ_2.set(x, s_2);
+}
+
+export stabilize
+
+# SPECIFICATION
+
+# there can't be two or more independent circles
+# invariant forall X, Y. active(X) & active(Y) & succ.p(X, X, X) -> succ.p(Y, X, X)
+
+# INVARIANTS (basic)
+
+invariant failed(X) -> active(X)
+
+# succ relations hold only between active nodes
+invariant succ_1.dom(X) -> active(X) & ~failed(X)
+invariant succ_2.dom(X) -> active(X) & ~failed(X)
+invariant succ_1.f(X, Y) -> active(Y)
+invariant succ_2.f(X, Y) -> active(Y)
+invariant active(X) & ~failed(X) -> succ_1.dom(X)
+invariant active(X) & ~failed(X) -> succ_2.dom(X)
+
+# only active nodes can be each other predecessors (since there are no failures)
+invariant pred.dom(X) -> active(X) & ~failed(X)
+invariant pred.f(X, Y) -> active(X) & active(Y)
+invariant pred.f(X, Y) -> ~failed(X)
+
+# if three nodes are on a cycle, they should follow btw relations
+# invariant succ.p(X, Y, Z) & succ.p(X, X, X) & X ~= Y & X ~= Z & Y ~= Z -> id_ring.btw(X, Y, Z)
+
+# root is always active and always has succ/pred
+invariant active(root)
+
+# root can reach itself
+# invariant succ.p(root, root, root)
+
+# root is reachable from every active node
+# invariant active(X) -> succ.p(X, root, root)
+
+# INVARIANTS about the predecessor
+
+# every node in the network has an unique predecessor
+# invariant pred(X, Y) & pred(X, Z) -> Y = Z (handled on module)
+
+# pred can reach node (reachability only increases in protocol without failures)
+# invariant pred.f(X, Y) -> succ.p(Y, X, X)
+
+# INVARIANTS relating pred with btw
+
+#invariant succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z & pred(Z, X) -> id_ring.btw(X, Y, Z) # got from chord10.dot
+# the nodes in the path between a node and its predecessor obey to the btw relation  
+#invariant forall P, N, X, Y, Z. pred(N, P) & succ.p(P, X, N) & succ.p(P, Y, N) & succ.p(P, Z, N) & succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z -> id_ring.btw(X, Y, Z) # correct, but use 5 quant, which makes ivy slow (next inv uses only 4 and is correct) from chord14.dot
+#invariant forall P, N, X, Y. pred(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & X ~= Y & X ~= P & Y ~= P & X ~= N & Y ~= N -> id_ring.btw(P, X, Y) # got from chord14.dot
+#invariant forall P, N, X, Y. pred(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & ~succ.p(N, Y, X) & X ~= Y & X ~= P & Y ~= P -> id_ring.btw(P, X, Y) # got from chord15.dot
+# (encompasses all above) invariant forall P, N, X, Y. pred.f(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & X ~= Y & X ~= P & Y ~= P & N ~= X -> id_ring.btw(P, X, Y) # got from chord15.dot
+
+# INVARIANTS for stage 2
+
+# is it true that succ_1 should reach succ_2? what if succ_1 stabilizes before node?
+
+# INVARIANTS that are correct, but file verifies without them
+
+# (correct, but file verifies without it) only the root has itself as its own predecessor
+# invariant pred(X, X) -> X = root
+
+# (correct, but file verifies without it)
+# invariant pred(X, Y) & id_ring.btw(X, Z, Y) & succ.p(Y, Z, Z) -> succ.p(X, Z, Z)
+
+# (correct, but file verifies without it)
+# invariant X ~= Y & X ~= Z & Y ~= Z & pred(X, Y) & succ.p(Y, Z, Z) & ~succ.p(X, Z, Z) -> id_ring.btw(Y, Z, X)
+# invariant pred(X, Y) & id_ring.btw(X, Z, Y) & succ.p(Y, Z, Z) -> succ.p(X, Z, Z)
+
+# (correct, but file verifies without it)
+# invariant succ.p(X, X, X) & ~succ.p(Y, X, X) & X ~= Y & active(Y) -> X = root
+
+
+
+
+    
