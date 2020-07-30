@@ -38,7 +38,6 @@ action join(x:id, y:id) = {
     #require s = y | id_ring.btw(y, x, s);
     #require id_ring.btw(y, x, s); # note: we should ensure it is joining in the correct place; can't rely on stabilize to take take of it because then will lead to a bug (example: root, b joins with a as successor, c joins with b as successor -> bug when b stabilizes if ring:a-b-c)
 
-    # not sure if it faithfully captures the model (in the model, node joins in the successor)
     call succ.set(x, y);
 
     # joins with no predecessor
@@ -115,11 +114,12 @@ invariant exists Y. pred(root, Y)
 invariant pred(X, Y) -> succ.p(Y, X, X)
 
 # INVARIANTS relating pred with btw
-invariant succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z & pred(Z, X) -> id_ring.btw(X, Y, Z) # got from chord10.dot
+#invariant succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z & pred(Z, X) -> id_ring.btw(X, Y, Z) # got from chord10.dot
 # the nodes in the path between a node and its predecessor obey to the btw relation  
-#invariant forall P, N, X, Y, Z. pred(N, P) & succ.p(P, X, N) & succ.p(P, Y, N) & succ.p(P, Z, N) & succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z -> id_ring.btw(X, Y, Z) # correct, but use 5 quant, which makes ivy slow (next inv uses only 4 and is correct)
-#invariant forall P, N, X, Y. pred(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & X ~= Y & X ~= P & Y ~= P & N ~= X & N ~= Y-> id_ring.btw(P, X, Y) # got from chord14.dot
-invariant pred(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & ~succ.p(N, Y, X) & X ~= Y & X ~= P & Y ~= P -> id_ring.btw(P, X, Y) # got from chord15.dot
+#invariant forall P, N, X, Y, Z. pred(N, P) & succ.p(P, X, N) & succ.p(P, Y, N) & succ.p(P, Z, N) & succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z -> id_ring.btw(X, Y, Z) # correct, but use 5 quant, which makes ivy slow (next inv uses only 4 and is correct) from chord14.dot
+#invariant forall P, N, X, Y. pred(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & X ~= Y & X ~= P & Y ~= P & X ~= N & Y ~= N -> id_ring.btw(P, X, Y) # got from chord14.dot
+#invariant forall P, N, X, Y. pred(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & ~succ.p(N, Y, X) & X ~= Y & X ~= P & Y ~= P -> id_ring.btw(P, X, Y) # got from chord15.dot
+invariant forall P, N, X, Y. pred(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & X ~= Y & X ~= P & Y ~= P & N ~= X -> id_ring.btw(P, X, Y) # got from chord15.dot
 
 # INVARIANTS that are correct, but file verifies without them
 
