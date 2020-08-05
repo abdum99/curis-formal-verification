@@ -1,0 +1,21 @@
+# INVARIANTS that are wrong for stage 1
+# (wrong) succ relations follow btw relations
+# invariant succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z -> id_ring.btw(X, Y, Z) # possible counterexample: chord12
+# counter-example: btw(0, 1, 2); 1 joins, 2 joins, 2 stab, 0 joins, 0 stb, 1 stab -> we have (2, 1) as an edge that violates the invariant
+
+# (wrong) if node is reachable from root, it should have a predecessor
+# invariant succ.p(root, X, X) -> pred(X, Y) # from chord11 btw(0, 1, 4, 2, 3)
+
+# (wrong) if node is reachable from root, its predecessor is also reachable from root
+# invariant succ.p(root, X, X) & pred(X, Y) -> succ.p(root, Y, Y) # from chord11 btw(0, 1, 4, 2, 3)
+
+# (wrong) invariant X ~= Y & Y ~= Z & X ~= Z & succ.p(Y, X, Z) & ~succ.p(Z, Y, X) -> ~id_ring.btw(X, Y, Z) # fails in join and stabilize
+# (wrong) invariant X ~= Y & Y ~= Z & X ~= Z & id_ring.btw(X, Y, Z) & succ.p(Y, X, X) & succ.p(Z, X, X) & ~succ.p(Y, Z, Z) -> succ.p(X, Y, Y)
+
+# (wrong) invariant succ.p(Y, X, X) & id_ring.btw(X, Y, Z) -> succ.p(X, Y, Y) # from chord12 (can't have root as its own successor)
+# counterexample: chord13 and 1 joins
+
+# (correct) invariant forall P, N, X, Y. pred(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & X ~= Y & X ~= P & Y ~= P & N ~= X & N ~= Y -> id_ring.btw(P, X, Y) # got from chord14.dot
+# (wrong form of previous invariant) invariant forall P, N, X, Y. pred(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & X ~= Y & X ~= P & Y ~= P -> id_ring.btw(P, X, Y) # counter-example: chord15.dot, 2 stabilizes
+
+#####################################################################################################################################################
