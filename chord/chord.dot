@@ -1,0 +1,22 @@
+
+    digraph G {
+    label = "stabilize(1,)"
+1 [style=filled]
+0 [color=green]
+0 [label="0
+root"]
+2 [color=green]
+1 [color=green]
+2 [label="2
+  @X
+"]0 [label="0
+ root
+@Y
+"]2 -> 1 [style=filled]
+1 -> 0 [style=filled]
+0 -> 0 [style=filled]
+0 -> 2 [style=dashed]
+
+
+    }
+    

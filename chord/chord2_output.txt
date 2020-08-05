@@ -1,0 +1,865 @@
+
+Isolate this:
+
+    The following properties are assumed as axioms:
+        ring.ivy: id_ring.axiom1
+        ring.ivy: id_ring.axiom2
+        ring.ivy: id_ring.axiom3
+        ring.ivy: id_ring.axiom4
+
+    The inductive invariant consists of the following conjectures:
+        partial_function.ivy: line 36: pred.invar6
+        partial_function.ivy: line 37: pred.invar7
+        partial_function.ivy: line 39: pred.invar8
+        partial_function.ivy: line 36: succ_1.invar6
+        partial_function.ivy: line 37: succ_1.invar7
+        partial_function.ivy: line 39: succ_1.invar8
+        partial_function.ivy: line 36: succ_2.invar6
+        partial_function.ivy: line 37: succ_2.invar7
+        partial_function.ivy: line 39: succ_2.invar8
+        path_partial_function_dom.ivy: line 45: succ.invar9
+        path_partial_function_dom.ivy: line 47: succ.invar10
+        path_partial_function_dom.ivy: line 49: succ.invar11
+        path_partial_function_dom.ivy: line 51: succ.invar12
+        path_partial_function_dom.ivy: line 53: succ.invar13
+        path_partial_function_dom.ivy: line 55: succ.invar14
+        path_partial_function_dom.ivy: line 57: succ.invar15
+        path_partial_function_dom.ivy: line 59: succ.invar16
+        path_partial_function_dom.ivy: line 61: succ.invar17
+        path_partial_function_dom.ivy: line 63: succ.invar18
+        path_partial_function_dom.ivy: line 69: succ.invar19
+        chord_stage_2.ivy: line 30: invar22
+        chord_stage_2.ivy: line 139: invar23
+        chord_stage_2.ivy: line 142: invar24
+        chord_stage_2.ivy: line 143: invar25
+        chord_stage_2.ivy: line 146: invar26
+        chord_stage_2.ivy: line 155: invar27
+        chord_stage_2.ivy: line 158: invar28
+        chord_stage_2.ivy: line 159: invar29
+        chord_stage_2.ivy: line 160: invar30
+        chord_stage_2.ivy: line 161: invar31
+        chord_stage_2.ivy: line 162: invar32
+        chord_stage_2.ivy: line 163: invar33
+        chord_stage_2.ivy: line 164: invar34
+        chord_stage_2.ivy: line 165: invar35
+        chord_stage_2.ivy: line 166: invar36
+        chord_stage_2.ivy: line 169: invar37
+        chord_stage_2.ivy: line 170: invar38
+        chord_stage_2.ivy: line 171: invar39
+        chord_stage_2.ivy: line 174: invar40
+        chord_stage_2.ivy: line 177: invar41
+        chord_stage_2.ivy: line 183: invar42
+        chord_stage_2.ivy: line 184: invar43
+        chord_stage_2.ivy: line 188: invar44
+        chord_stage_2.ivy: line 216: invar45
+
+    The following action implementations are present:
+        chord_stage_2.ivy: line 70: implementation of check_pred
+        chord_stage_2.ivy: line 52: implementation of fail
+        chord_stage_2.ivy: line 32: implementation of join
+        partial_function.ivy: line 24: implementation of pred.get
+        partial_function.ivy: line 30: implementation of pred.remove
+        partial_function.ivy: line 17: implementation of pred.set
+        chord_stage_2.ivy: line 81: implementation of stabilize
+        path_partial_function_dom.ivy: line 111: implementation of succ.remove
+        path_partial_function_dom.ivy: line 83: implementation of succ.set
+        partial_function.ivy: line 24: implementation of succ_1.get
+        partial_function.ivy: line 30: implementation of succ_1.remove
+        partial_function.ivy: line 17: implementation of succ_1.set
+        partial_function.ivy: line 24: implementation of succ_2.get
+        partial_function.ivy: line 30: implementation of succ_2.remove
+        partial_function.ivy: line 17: implementation of succ_2.set
+
+    The following initializers are present:
+        chord_stage_2.ivy: line 20: init[after21]
+        partial_function.ivy: line 11: pred.init[after5]
+        path_partial_function_dom.ivy: line 76: succ.init[after20]
+        partial_function.ivy: line 11: succ_1.init[after5]
+        partial_function.ivy: line 11: succ_2.init[after5]
+
+    Initialization must establish the invariant
+        partial_function.ivy: line 36: pred.invar6 ... PASS
+        partial_function.ivy: line 37: pred.invar7 ... PASS
+        partial_function.ivy: line 39: pred.invar8 ... PASS
+        partial_function.ivy: line 36: succ_1.invar6 ... PASS
+        partial_function.ivy: line 37: succ_1.invar7 ... PASS
+        partial_function.ivy: line 39: succ_1.invar8 ... PASS
+        partial_function.ivy: line 36: succ_2.invar6 ... PASS
+        partial_function.ivy: line 37: succ_2.invar7 ... PASS
+        partial_function.ivy: line 39: succ_2.invar8 ... PASS
+        path_partial_function_dom.ivy: line 45: succ.invar9 ... PASS
+        path_partial_function_dom.ivy: line 47: succ.invar10 ... PASS
+        path_partial_function_dom.ivy: line 49: succ.invar11 ... PASS
+        path_partial_function_dom.ivy: line 51: succ.invar12 ... PASS
+        path_partial_function_dom.ivy: line 53: succ.invar13 ... PASS
+        path_partial_function_dom.ivy: line 55: succ.invar14 ... PASS
+        path_partial_function_dom.ivy: line 57: succ.invar15 ... PASS
+        path_partial_function_dom.ivy: line 59: succ.invar16 ... PASS
+        path_partial_function_dom.ivy: line 61: succ.invar17 ... PASS
+        path_partial_function_dom.ivy: line 63: succ.invar18 ... PASS
+        path_partial_function_dom.ivy: line 69: succ.invar19 ... PASS
+        chord_stage_2.ivy: line 30: invar22 ... PASS
+        chord_stage_2.ivy: line 139: invar23 ... PASS
+        chord_stage_2.ivy: line 142: invar24 ... PASS
+        chord_stage_2.ivy: line 143: invar25 ... PASS
+        chord_stage_2.ivy: line 146: invar26 ... PASS
+        chord_stage_2.ivy: line 155: invar27 ... PASS
+        chord_stage_2.ivy: line 158: invar28 ... PASS
+        chord_stage_2.ivy: line 159: invar29 ... PASS
+        chord_stage_2.ivy: line 160: invar30 ... PASS
+        chord_stage_2.ivy: line 161: invar31 ... PASS
+        chord_stage_2.ivy: line 162: invar32 ... PASS
+        chord_stage_2.ivy: line 163: invar33 ... PASS
+        chord_stage_2.ivy: line 164: invar34 ... PASS
+        chord_stage_2.ivy: line 165: invar35 ... PASS
+        chord_stage_2.ivy: line 166: invar36 ... PASS
+        chord_stage_2.ivy: line 169: invar37 ... PASS
+        chord_stage_2.ivy: line 170: invar38 ... PASS
+        chord_stage_2.ivy: line 171: invar39 ... PASS
+        chord_stage_2.ivy: line 174: invar40 ... PASS
+        chord_stage_2.ivy: line 177: invar41 ... PASS
+        chord_stage_2.ivy: line 183: invar42 ... PASS
+        chord_stage_2.ivy: line 184: invar43 ... PASS
+        chord_stage_2.ivy: line 188: invar44 ... PASS
+        chord_stage_2.ivy: line 216: invar45 ... PASS
+
+    Any assertions in initializers must be checked ... PASS
+
+    The following set of external actions must preserve the invariant:
+        (internal) ext:check_pred
+            partial_function.ivy: line 36: pred.invar6 ... PASS
+            partial_function.ivy: line 37: pred.invar7 ... PASS
+            partial_function.ivy: line 39: pred.invar8 ... PASS
+            partial_function.ivy: line 36: succ_1.invar6 ... PASS
+            partial_function.ivy: line 37: succ_1.invar7 ... PASS
+            partial_function.ivy: line 39: succ_1.invar8 ... PASS
+            partial_function.ivy: line 36: succ_2.invar6 ... PASS
+            partial_function.ivy: line 37: succ_2.invar7 ... PASS
+            partial_function.ivy: line 39: succ_2.invar8 ... PASS
+            path_partial_function_dom.ivy: line 45: succ.invar9 ... PASS
+            path_partial_function_dom.ivy: line 47: succ.invar10 ... PASS
+            path_partial_function_dom.ivy: line 49: succ.invar11 ... PASS
+            path_partial_function_dom.ivy: line 51: succ.invar12 ... PASS
+            path_partial_function_dom.ivy: line 53: succ.invar13 ... PASS
+            path_partial_function_dom.ivy: line 55: succ.invar14 ... PASS
+            path_partial_function_dom.ivy: line 57: succ.invar15 ... PASS
+            path_partial_function_dom.ivy: line 59: succ.invar16 ... PASS
+            path_partial_function_dom.ivy: line 61: succ.invar17 ... PASS
+            path_partial_function_dom.ivy: line 63: succ.invar18 ... PASS
+            path_partial_function_dom.ivy: line 69: succ.invar19 ... PASS
+            chord_stage_2.ivy: line 30: invar22 ... PASS
+            chord_stage_2.ivy: line 139: invar23 ... PASS
+            chord_stage_2.ivy: line 142: invar24 ... PASS
+            chord_stage_2.ivy: line 143: invar25 ... PASS
+            chord_stage_2.ivy: line 146: invar26 ... PASS
+            chord_stage_2.ivy: line 155: invar27 ... PASS
+            chord_stage_2.ivy: line 158: invar28 ... PASS
+            chord_stage_2.ivy: line 159: invar29 ... PASS
+            chord_stage_2.ivy: line 160: invar30 ... PASS
+            chord_stage_2.ivy: line 161: invar31 ... PASS
+            chord_stage_2.ivy: line 162: invar32 ... PASS
+            chord_stage_2.ivy: line 163: invar33 ... PASS
+            chord_stage_2.ivy: line 164: invar34 ... PASS
+            chord_stage_2.ivy: line 165: invar35 ... PASS
+            chord_stage_2.ivy: line 166: invar36 ... PASS
+            chord_stage_2.ivy: line 169: invar37 ... PASS
+            chord_stage_2.ivy: line 170: invar38 ... PASS
+            chord_stage_2.ivy: line 171: invar39 ... PASS
+            chord_stage_2.ivy: line 174: invar40 ... PASS
+            chord_stage_2.ivy: line 177: invar41 ... PASS
+            chord_stage_2.ivy: line 183: invar42 ... PASS
+            chord_stage_2.ivy: line 184: invar43 ... PASS
+            chord_stage_2.ivy: line 188: invar44 ... PASS
+            chord_stage_2.ivy: line 216: invar45 ... PASS
+        (internal) ext:fail
+            partial_function.ivy: line 36: pred.invar6 ... PASS
+            partial_function.ivy: line 37: pred.invar7 ... PASS
+            partial_function.ivy: line 39: pred.invar8 ... PASS
+            partial_function.ivy: line 36: succ_1.invar6 ... PASS
+            partial_function.ivy: line 37: succ_1.invar7 ... PASS
+            partial_function.ivy: line 39: succ_1.invar8 ... PASS
+            partial_function.ivy: line 36: succ_2.invar6 ... PASS
+            partial_function.ivy: line 37: succ_2.invar7 ... PASS
+            partial_function.ivy: line 39: succ_2.invar8 ... PASS
+            path_partial_function_dom.ivy: line 45: succ.invar9 ... PASS
+            path_partial_function_dom.ivy: line 47: succ.invar10 ... PASS
+            path_partial_function_dom.ivy: line 49: succ.invar11 ... PASS
+            path_partial_function_dom.ivy: line 51: succ.invar12 ... PASS
+            path_partial_function_dom.ivy: line 53: succ.invar13 ... PASS
+            path_partial_function_dom.ivy: line 55: succ.invar14 ... PASS
+            path_partial_function_dom.ivy: line 57: succ.invar15 ... PASS
+            path_partial_function_dom.ivy: line 59: succ.invar16 ... PASS
+            path_partial_function_dom.ivy: line 61: succ.invar17 ... PASS
+            path_partial_function_dom.ivy: line 63: succ.invar18 ... PASS
+            path_partial_function_dom.ivy: line 69: succ.invar19 ... PASS
+            chord_stage_2.ivy: line 30: invar22 ... PASS
+            chord_stage_2.ivy: line 139: invar23 ... PASS
+            chord_stage_2.ivy: line 142: invar24 ... PASS
+            chord_stage_2.ivy: line 143: invar25 ... PASS
+            chord_stage_2.ivy: line 146: invar26 ... PASS
+            chord_stage_2.ivy: line 155: invar27 ... PASS
+            chord_stage_2.ivy: line 158: invar28 ... PASS
+            chord_stage_2.ivy: line 159: invar29 ... PASS
+            chord_stage_2.ivy: line 160: invar30 ... PASS
+            chord_stage_2.ivy: line 161: invar31 ... PASS
+            chord_stage_2.ivy: line 162: invar32 ... PASS
+            chord_stage_2.ivy: line 163: invar33 ... PASS
+            chord_stage_2.ivy: line 164: invar34 ... PASS
+            chord_stage_2.ivy: line 165: invar35 ... PASS
+            chord_stage_2.ivy: line 166: invar36 ... PASS
+            chord_stage_2.ivy: line 169: invar37 ... PASS
+            chord_stage_2.ivy: line 170: invar38 ... PASS
+            chord_stage_2.ivy: line 171: invar39 ... PASS
+            chord_stage_2.ivy: line 174: invar40 ... PASS
+            chord_stage_2.ivy: line 177: invar41 ... PASS
+            chord_stage_2.ivy: line 183: invar42 ... PASS
+            chord_stage_2.ivy: line 184: invar43 ... PASS
+            chord_stage_2.ivy: line 188: invar44 ... PASS
+            chord_stage_2.ivy: line 216: invar45 ... PASS
+        (internal) ext:join
+            partial_function.ivy: line 36: pred.invar6 ... PASS
+            partial_function.ivy: line 37: pred.invar7 ... PASS
+            partial_function.ivy: line 39: pred.invar8 ... PASS
+            partial_function.ivy: line 36: succ_1.invar6 ... PASS
+            partial_function.ivy: line 37: succ_1.invar7 ... PASS
+            partial_function.ivy: line 39: succ_1.invar8 ... PASS
+            partial_function.ivy: line 36: succ_2.invar6 ... PASS
+            partial_function.ivy: line 37: succ_2.invar7 ... PASS
+            partial_function.ivy: line 39: succ_2.invar8 ... PASS
+            path_partial_function_dom.ivy: line 45: succ.invar9 ... PASS
+            path_partial_function_dom.ivy: line 47: succ.invar10 ... PASS
+            path_partial_function_dom.ivy: line 49: succ.invar11 ... PASS
+            path_partial_function_dom.ivy: line 51: succ.invar12 ... PASS
+            path_partial_function_dom.ivy: line 53: succ.invar13 ... PASS
+            path_partial_function_dom.ivy: line 55: succ.invar14 ... PASS
+            path_partial_function_dom.ivy: line 57: succ.invar15 ... PASS
+            path_partial_function_dom.ivy: line 59: succ.invar16 ... PASS
+            path_partial_function_dom.ivy: line 61: succ.invar17 ... PASS
+            path_partial_function_dom.ivy: line 63: succ.invar18 ... PASS
+            path_partial_function_dom.ivy: line 69: succ.invar19 ... PASS
+            chord_stage_2.ivy: line 30: invar22 ... PASS
+            chord_stage_2.ivy: line 139: invar23 ... PASS
+            chord_stage_2.ivy: line 142: invar24 ... PASS
+            chord_stage_2.ivy: line 143: invar25 ... PASS
+            chord_stage_2.ivy: line 146: invar26 ... PASS
+            chord_stage_2.ivy: line 155: invar27 ... PASS
+            chord_stage_2.ivy: line 158: invar28 ... PASS
+            chord_stage_2.ivy: line 159: invar29 ... PASS
+            chord_stage_2.ivy: line 160: invar30 ... PASS
+            chord_stage_2.ivy: line 161: invar31 ... PASS
+            chord_stage_2.ivy: line 162: invar32 ... PASS
+            chord_stage_2.ivy: line 163: invar33 ... PASS
+            chord_stage_2.ivy: line 164: invar34 ... PASS
+            chord_stage_2.ivy: line 165: invar35 ... PASS
+            chord_stage_2.ivy: line 166: invar36 ... PASS
+            chord_stage_2.ivy: line 169: invar37 ... PASS
+            chord_stage_2.ivy: line 170: invar38 ... PASS
+            chord_stage_2.ivy: line 171: invar39 ... PASS
+            chord_stage_2.ivy: line 174: invar40 ... PASS
+            chord_stage_2.ivy: line 177: invar41 ... PASS
+            chord_stage_2.ivy: line 183: invar42 ... PASS
+            chord_stage_2.ivy: line 184: invar43 ... PASS
+            chord_stage_2.ivy: line 188: invar44 ... PASS
+            chord_stage_2.ivy: line 216: invar45 ... PASS
+        (internal) ext:stabilize
+            partial_function.ivy: line 36: pred.invar6 ... PASS
+            partial_function.ivy: line 37: pred.invar7 ... PASS
+            partial_function.ivy: line 39: pred.invar8 ... PASS
+            partial_function.ivy: line 36: succ_1.invar6 ... PASS
+            partial_function.ivy: line 37: succ_1.invar7 ... PASS
+            partial_function.ivy: line 39: succ_1.invar8 ... PASS
+            partial_function.ivy: line 36: succ_2.invar6 ... PASS
+            partial_function.ivy: line 37: succ_2.invar7 ... PASS
+            partial_function.ivy: line 39: succ_2.invar8 ... PASS
+            path_partial_function_dom.ivy: line 45: succ.invar9 ... PASS
+            path_partial_function_dom.ivy: line 47: succ.invar10 ... PASS
+            path_partial_function_dom.ivy: line 49: succ.invar11 ... PASS
+            path_partial_function_dom.ivy: line 51: succ.invar12 ... PASS
+            path_partial_function_dom.ivy: line 53: succ.invar13 ... PASS
+            path_partial_function_dom.ivy: line 55: succ.invar14 ... PASS
+            path_partial_function_dom.ivy: line 57: succ.invar15 ... PASS
+            path_partial_function_dom.ivy: line 59: succ.invar16 ... PASS
+            path_partial_function_dom.ivy: line 61: succ.invar17 ... PASS
+            path_partial_function_dom.ivy: line 63: succ.invar18 ... PASS
+            path_partial_function_dom.ivy: line 69: succ.invar19 ... PASS
+            chord_stage_2.ivy: line 30: invar22 ... PASS
+            chord_stage_2.ivy: line 139: invar23 ... FAIL
+searching for a small model... done
+[
+    @X = 0
+    failed(1) = true
+    failed(0) = false
+    failed(2) = false
+    failed(3) = false
+    succ_2.a = 1
+    active(0) = true
+    active(1) = true
+    active(2) = true
+    active(3) = true
+    a = 1
+    root = 0
+    @Y = 3
+    succ.a = 2
+    id_ring.btw(0,1,2) = true
+    id_ring.btw(0,1,3) = true
+    id_ring.btw(0,3,2) = true
+    id_ring.btw(1,2,0) = true
+    id_ring.btw(1,3,0) = true
+    id_ring.btw(1,3,2) = true
+    id_ring.btw(2,0,1) = true
+    id_ring.btw(2,0,3) = true
+    id_ring.btw(2,1,3) = true
+    id_ring.btw(3,0,1) = true
+    id_ring.btw(3,2,0) = true
+    id_ring.btw(3,2,1) = true
+    id_ring.btw(0,0,0) = false
+    id_ring.btw(0,0,1) = false
+    id_ring.btw(0,0,2) = false
+    id_ring.btw(0,0,3) = false
+    id_ring.btw(0,1,0) = false
+    id_ring.btw(0,1,1) = false
+    id_ring.btw(0,2,0) = false
+    id_ring.btw(0,2,1) = false
+    id_ring.btw(0,2,2) = false
+    id_ring.btw(0,2,3) = false
+    id_ring.btw(0,3,0) = false
+    id_ring.btw(0,3,1) = false
+    id_ring.btw(0,3,3) = false
+    id_ring.btw(1,0,0) = false
+    id_ring.btw(1,0,1) = false
+    id_ring.btw(1,0,2) = false
+    id_ring.btw(1,0,3) = false
+    id_ring.btw(1,1,0) = false
+    id_ring.btw(1,1,1) = false
+    id_ring.btw(1,1,2) = false
+    id_ring.btw(1,1,3) = false
+    id_ring.btw(1,2,1) = false
+    id_ring.btw(1,2,2) = false
+    id_ring.btw(1,2,3) = false
+    id_ring.btw(1,3,1) = false
+    id_ring.btw(1,3,3) = false
+    id_ring.btw(2,0,0) = false
+    id_ring.btw(2,0,2) = false
+    id_ring.btw(2,1,0) = false
+    id_ring.btw(2,1,1) = false
+    id_ring.btw(2,1,2) = false
+    id_ring.btw(2,2,0) = false
+    id_ring.btw(2,2,1) = false
+    id_ring.btw(2,2,2) = false
+    id_ring.btw(2,2,3) = false
+    id_ring.btw(2,3,0) = false
+    id_ring.btw(2,3,1) = false
+    id_ring.btw(2,3,2) = false
+    id_ring.btw(2,3,3) = false
+    id_ring.btw(3,0,0) = false
+    id_ring.btw(3,0,2) = false
+    id_ring.btw(3,0,3) = false
+    id_ring.btw(3,1,0) = false
+    id_ring.btw(3,1,1) = false
+    id_ring.btw(3,1,2) = false
+    id_ring.btw(3,1,3) = false
+    id_ring.btw(3,2,2) = false
+    id_ring.btw(3,2,3) = false
+    id_ring.btw(3,3,0) = false
+    id_ring.btw(3,3,1) = false
+    id_ring.btw(3,3,2) = false
+    id_ring.btw(3,3,3) = false
+    pred.a = 2
+    succ_1.a = 2
+    succ_1.dom(0) = true
+    succ_1.dom(2) = true
+    succ_1.dom(3) = true
+    succ_1.dom(1) = false
+    succ.f(0,2) = true
+    succ.f(2,1) = true
+    succ.f(0,0) = false
+    succ.f(0,1) = false
+    succ.f(0,3) = false
+    succ.f(1,0) = false
+    succ.f(1,1) = false
+    succ.f(1,2) = false
+    succ.f(1,3) = false
+    succ.f(2,0) = false
+    succ.f(2,2) = false
+    succ.f(2,3) = false
+    succ.f(3,0) = false
+    succ.f(3,1) = false
+    succ.f(3,2) = false
+    succ.f(3,3) = false
+    pred.dom(2) = true
+    pred.dom(3) = true
+    pred.dom(0) = false
+    pred.dom(1) = false
+    succ.p(0,1,1) = true
+    succ.p(0,2,1) = true
+    succ.p(0,2,2) = true
+    succ.p(2,1,1) = true
+    succ.p(3,3,3) = true
+    succ.p(0,0,0) = false
+    succ.p(0,0,1) = false
+    succ.p(0,0,2) = false
+    succ.p(0,0,3) = false
+    succ.p(0,1,0) = false
+    succ.p(0,1,2) = false
+    succ.p(0,1,3) = false
+    succ.p(0,2,0) = false
+    succ.p(0,2,3) = false
+    succ.p(0,3,0) = false
+    succ.p(0,3,1) = false
+    succ.p(0,3,2) = false
+    succ.p(0,3,3) = false
+    succ.p(1,0,0) = false
+    succ.p(1,0,1) = false
+    succ.p(1,0,2) = false
+    succ.p(1,0,3) = false
+    succ.p(1,1,0) = false
+    succ.p(1,1,1) = false
+    succ.p(1,1,2) = false
+    succ.p(1,1,3) = false
+    succ.p(1,2,0) = false
+    succ.p(1,2,1) = false
+    succ.p(1,2,2) = false
+    succ.p(1,2,3) = false
+    succ.p(1,3,0) = false
+    succ.p(1,3,1) = false
+    succ.p(1,3,2) = false
+    succ.p(1,3,3) = false
+    succ.p(2,0,0) = false
+    succ.p(2,0,1) = false
+    succ.p(2,0,2) = false
+    succ.p(2,0,3) = false
+    succ.p(2,1,0) = false
+    succ.p(2,1,2) = false
+    succ.p(2,1,3) = false
+    succ.p(2,2,0) = false
+    succ.p(2,2,1) = false
+    succ.p(2,2,2) = false
+    succ.p(2,2,3) = false
+    succ.p(2,3,0) = false
+    succ.p(2,3,1) = false
+    succ.p(2,3,2) = false
+    succ.p(2,3,3) = false
+    succ.p(3,0,0) = false
+    succ.p(3,0,1) = false
+    succ.p(3,0,2) = false
+    succ.p(3,0,3) = false
+    succ.p(3,1,0) = false
+    succ.p(3,1,1) = false
+    succ.p(3,1,2) = false
+    succ.p(3,1,3) = false
+    succ.p(3,2,0) = false
+    succ.p(3,2,1) = false
+    succ.p(3,2,2) = false
+    succ.p(3,2,3) = false
+    succ.p(3,3,0) = false
+    succ.p(3,3,1) = false
+    succ.p(3,3,2) = false
+    succ_2.dom(0) = true
+    succ_2.dom(2) = true
+    succ_2.dom(3) = true
+    succ_2.dom(1) = false
+    succ.dom(0) = true
+    succ.dom(2) = true
+    succ.dom(3) = true
+    succ.dom(1) = false
+    succ_2.f(2,3) = true
+    succ_2.f(0,0) = false
+    succ_2.f(0,1) = false
+    succ_2.f(0,2) = false
+    succ_2.f(0,3) = false
+    succ_2.f(1,0) = false
+    succ_2.f(1,1) = false
+    succ_2.f(1,2) = false
+    succ_2.f(1,3) = false
+    succ_2.f(2,0) = false
+    succ_2.f(2,1) = false
+    succ_2.f(2,2) = false
+    succ_2.f(3,0) = false
+    succ_2.f(3,1) = false
+    succ_2.f(3,2) = false
+    succ_2.f(3,3) = false
+    pred.f(2,0) = true
+    pred.f(3,0) = true
+    pred.f(0,0) = false
+    pred.f(0,1) = false
+    pred.f(0,2) = false
+    pred.f(0,3) = false
+    pred.f(1,0) = false
+    pred.f(1,1) = false
+    pred.f(1,2) = false
+    pred.f(1,3) = false
+    pred.f(2,1) = false
+    pred.f(2,2) = false
+    pred.f(2,3) = false
+    pred.f(3,1) = false
+    pred.f(3,2) = false
+    pred.f(3,3) = false
+    succ_1.f(0,2) = true
+    succ_1.f(2,1) = true
+    succ_1.f(0,0) = false
+    succ_1.f(0,1) = false
+    succ_1.f(0,3) = false
+    succ_1.f(1,0) = false
+    succ_1.f(1,1) = false
+    succ_1.f(1,2) = false
+    succ_1.f(1,3) = false
+    succ_1.f(2,0) = false
+    succ_1.f(2,2) = false
+    succ_1.f(2,3) = false
+    succ_1.f(3,0) = false
+    succ_1.f(3,1) = false
+    succ_1.f(3,2) = false
+    succ_1.f(3,3) = false
+]
+call stabilize
+
+{
+    [
+        fml:x = 2
+    ]
+    chord_stage_2.ivy: line 82: assume active(fml:x)
+
+    chord_stage_2.ivy: line 83: assume ~failed(fml:x)
+
+    [
+        fml:y = 1
+    ]
+    chord_stage_2.ivy: line 85: call loc:0 := succ_1.get(fml:x)
+    {
+        [
+            fml:x_a = 2
+        ]
+        partial_function.ivy: line 25: assert succ_1.dom(fml:x)
+
+        partial_function.ivy: line 26: assume succ_1.f(fml:x,fml:y)
+
+    }
+
+    [
+        loc:0 = 1
+    ]
+    chord_stage_2.ivy: line 85: loc:s_1 := loc:0
+
+    [
+        fml:y = 3
+        loc:s_1 = 1
+    ]
+    chord_stage_2.ivy: line 86: call loc:0 := succ_2.get(fml:x)
+    {
+        partial_function.ivy: line 25: assert succ_2.dom(fml:x)
+
+        partial_function.ivy: line 26: assume succ_2.f(fml:x,fml:y)
+
+    }
+
+    [
+        loc:0 = 3
+        fml:y = 1
+    ]
+    chord_stage_2.ivy: line 86: loc:s_2 := loc:0
+
+    [
+        loc:s_2 = 3
+    ]
+    chord_stage_2.ivy: line 89: assume ~failed(loc:s_1) | ~failed(loc:s_2)
+
+    chord_stage_2.ivy: line 93: call succ_1.remove(fml:x)
+    {
+        partial_function.ivy: line 31: assert succ_1.dom(fml:x)
+
+        partial_function.ivy: line 32: succ_1.f(fml:x,Y) := false
+
+        [
+            succ_1.f(2,1) = false
+        ]
+        partial_function.ivy: line 33: succ_1.dom(fml:x) := false
+
+        [
+            succ_1.dom(2) = false
+        ]
+    }
+
+    chord_stage_2.ivy: line 94: call succ.remove(fml:x)
+    {
+        path_partial_function_dom.ivy: line 112: assert succ.dom(fml:x)
+
+        path_partial_function_dom.ivy: line 113: succ.p(W,U,V) := succ.p(W,U,V) & W ~= fml:x & (succ.p(W,fml:x,fml:x) -> succ.p(W,V,fml:x))
+
+        [
+            succ.p(0,1,1) = false
+            succ.p(0,2,1) = false
+            succ.p(2,1,1) = false
+        ]
+        path_partial_function_dom.ivy: line 114: succ.f(fml:x,Y) := false
+
+        [
+            succ.f(2,1) = false
+        ]
+        path_partial_function_dom.ivy: line 115: succ.dom(fml:x) := false
+
+        [
+            succ.dom(2) = false
+        ]
+    }
+
+    [
+        fml:y = 3
+    ]
+    chord_stage_2.ivy: line 95: call succ_1.set(fml:x, loc:s_2)
+    {
+        partial_function.ivy: line 18: assert ~succ_1.dom(fml:x)
+
+        partial_function.ivy: line 19: succ_1.f(fml:x,Y) := Y:id = fml:y
+
+        [
+            succ_1.f(2,3) = true
+        ]
+        partial_function.ivy: line 20: succ_1.dom(fml:x) := true
+
+        [
+            succ_1.dom(2) = true
+        ]
+    }
+
+    chord_stage_2.ivy: line 96: call succ.set(fml:x, loc:s_2)
+    {
+        path_partial_function_dom.ivy: line 84: assert ~succ.dom(fml:x)
+
+        path_partial_function_dom.ivy: line 86: succ.p(W,U,V) := succ.p(W,U,V) | ~succ.p(W,V,V) & (succ.p(W,fml:x,fml:x) | W = fml:x) & ((succ.p(W,U,fml:x) | U = fml:y) & (succ.p(fml:y,V,V) | V = fml:y) | succ.p(fml:y,U,V) & V ~= fml:y)
+
+        [
+            succ.p(0,2,3) = true
+            succ.p(0,3,3) = true
+            succ.p(2,3,3) = true
+        ]
+        path_partial_function_dom.ivy: line 91: succ.f(fml:x,Y) := fml:y = Y
+
+        [
+            succ.f(2,3) = true
+        ]
+        path_partial_function_dom.ivy: line 92: succ.dom(fml:x) := true
+
+        [
+            succ.dom(2) = true
+        ]
+    }
+
+    chord_stage_2.ivy: line 99: call loc:s_1 := succ_1.get(fml:x)
+    {
+        partial_function.ivy: line 25: assert succ_1.dom(fml:x)
+
+        partial_function.ivy: line 26: assume succ_1.f(fml:x,fml:y)
+
+    }
+
+    [
+        fml:y = 1
+        loc:s_1 = 3
+    ]
+    chord_stage_2.ivy: line 100: assert ~failed(loc:s_1)
+
+    [
+        fml:y = 0
+    ]
+    chord_stage_2.ivy: line 104: call loc:0 := pred.get(loc:s_1)
+    {
+        [
+            fml:x = 3
+        ]
+        partial_function.ivy: line 25: assert pred.dom(fml:x)
+
+        partial_function.ivy: line 26: assume pred.f(fml:x,fml:y)
+
+    }
+
+    [
+        loc:0 = 0
+        fml:y = 1
+        fml:x = 2
+    ]
+    chord_stage_2.ivy: line 104: loc:y := loc:0
+
+    [
+        loc:y = 0
+    ]
+    chord_stage_2.ivy: line 106: call succ_1.remove(fml:x)
+    {
+        partial_function.ivy: line 31: assert succ_1.dom(fml:x)
+
+        partial_function.ivy: line 32: succ_1.f(fml:x,Y) := false
+
+        [
+            succ_1.f(2,3) = false
+        ]
+        partial_function.ivy: line 33: succ_1.dom(fml:x) := false
+
+        [
+            succ_1.dom(2) = false
+        ]
+    }
+
+    chord_stage_2.ivy: line 107: call succ.remove(fml:x)
+    {
+        path_partial_function_dom.ivy: line 112: assert succ.dom(fml:x)
+
+        path_partial_function_dom.ivy: line 113: succ.p(W,U,V) := succ.p(W,U,V) & W ~= fml:x & (succ.p(W,fml:x,fml:x) -> succ.p(W,V,fml:x))
+
+        [
+            succ.p(0,2,3) = false
+            succ.p(0,3,3) = false
+            succ.p(2,3,3) = false
+        ]
+        path_partial_function_dom.ivy: line 114: succ.f(fml:x,Y) := false
+
+        [
+            succ.f(2,3) = false
+        ]
+        path_partial_function_dom.ivy: line 115: succ.dom(fml:x) := false
+
+        [
+            succ.dom(2) = false
+        ]
+    }
+
+    [
+        fml:y = 0
+    ]
+    chord_stage_2.ivy: line 108: call succ_1.set(fml:x, loc:y)
+    {
+        partial_function.ivy: line 18: assert ~succ_1.dom(fml:x)
+
+        partial_function.ivy: line 19: succ_1.f(fml:x,Y) := Y:id = fml:y
+
+        [
+            succ_1.f(2,0) = true
+        ]
+        partial_function.ivy: line 20: succ_1.dom(fml:x) := true
+
+        [
+            succ_1.dom(2) = true
+        ]
+    }
+
+    chord_stage_2.ivy: line 109: call succ.set(fml:x, loc:y)
+    {
+        path_partial_function_dom.ivy: line 84: assert ~succ.dom(fml:x)
+
+        path_partial_function_dom.ivy: line 86: succ.p(W,U,V) := succ.p(W,U,V) | ~succ.p(W,V,V) & (succ.p(W,fml:x,fml:x) | W = fml:x) & ((succ.p(W,U,fml:x) | U = fml:y) & (succ.p(fml:y,V,V) | V = fml:y) | succ.p(fml:y,U,V) & V ~= fml:y)
+
+        [
+            succ.p(0,0,0) = true
+            succ.p(0,2,0) = true
+            succ.p(2,0,0) = true
+            succ.p(2,0,2) = true
+            succ.p(2,2,2) = true
+        ]
+        path_partial_function_dom.ivy: line 91: succ.f(fml:x,Y) := fml:y = Y
+
+        [
+            succ.f(2,0) = true
+        ]
+        path_partial_function_dom.ivy: line 92: succ.dom(fml:x) := true
+
+        [
+            succ.dom(2) = true
+        ]
+    }
+
+    [
+        loc:0 = 3
+    ]
+    chord_stage_2.ivy: line 113: call loc:s_1 := succ_1.get(fml:x)
+    {
+        partial_function.ivy: line 25: assert succ_1.dom(fml:x)
+
+        partial_function.ivy: line 26: assume succ_1.f(fml:x,fml:y)
+
+    }
+
+    [
+        fml:y = 1
+        loc:s_1 = 0
+    ]
+    chord_stage_2.ivy: line 125: call pred.set(loc:s_1, fml:x)
+    {
+        [
+            fml:x_a = 0
+            fml:y = 2
+        ]
+        partial_function.ivy: line 18: assert ~pred.dom(fml:x)
+
+        partial_function.ivy: line 19: pred.f(fml:x,Y) := Y:id = fml:y
+
+        [
+            pred.f(0,2) = true
+        ]
+        partial_function.ivy: line 20: pred.dom(fml:x) := true
+
+        [
+            pred.dom(0) = true
+        ]
+    }
+
+    chord_stage_2.ivy: line 129: call loc:s_2 := succ_1.get(loc:s_1)
+    {
+        [
+            fml:x = 0
+        ]
+        partial_function.ivy: line 25: assert succ_1.dom(fml:x)
+
+        partial_function.ivy: line 26: assume succ_1.f(fml:x,fml:y)
+
+    }
+
+    [
+        fml:y = 1
+        loc:s_2 = 2
+        fml:x = 2
+    ]
+    chord_stage_2.ivy: line 130: call succ_2.remove(fml:x)
+    {
+        [
+            fml:x_a = 2
+        ]
+        partial_function.ivy: line 31: assert succ_2.dom(fml:x)
+
+        partial_function.ivy: line 32: succ_2.f(fml:x,Y) := false
+
+        [
+            succ_2.f(2,3) = false
+        ]
+        partial_function.ivy: line 33: succ_2.dom(fml:x) := false
+
+        [
+            succ_2.dom(2) = false
+        ]
+    }
+
+    [
+        fml:y = 3
+    ]
+    chord_stage_2.ivy: line 131: call succ_2.set(fml:x, loc:s_2)
+    {
+        [
+            fml:y = 2
+        ]
+        partial_function.ivy: line 18: assert ~succ_2.dom(fml:x)
+
+        partial_function.ivy: line 19: succ_2.f(fml:x,Y) := Y:id = fml:y
+
+        [
+            succ_2.f(2,2) = true
+        ]
+        partial_function.ivy: line 20: succ_2.dom(fml:x) := true
+
+        [
+            succ_2.dom(2) = true
+        ]
+    }
+
+    [
+        fml:y = 1
+    ]
+}
+
+

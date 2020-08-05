@@ -1,0 +1,47 @@
+
+    digraph G {
+    label = "stabilize(3,)
+ succ.p: orange
+ succ_1: blue
+ succ_2: red"
+3 [style=filled]
+3 [color=green]
+0 [color=green]
+2 [color=green]
+1 [color=green]
+1 [color=red]
+0 [label="0
+ root
+active
+succ_1.dom
+succ_2.dom
+succ.dom
+@X
+"]1 [label="1
+  active
+failed
+"]2 [label="2
+  active
+succ_1.dom
+succ_2.dom
+succ.dom
+pred.dom
+@Y
+"]3 [label="3
+  active
+succ_1.dom
+succ_2.dom
+succ.dom
+pred.dom
+"]0 -> 3 [style=filled, color=blue]
+3 -> 1 [style=filled, color=blue]
+3 -> 2 [style=filled, color=red]
+0 -> 3 [style=filled, color=orange]
+3 -> 1 [style=filled, color=orange]
+2 -> 2 [style=filled, color=orange]
+2 -> 0 [style=dashed]
+3 -> 0 [style=dashed]
+
+
+    }
+    
