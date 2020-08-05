@@ -1,0 +1,16 @@
+
+    digraph G {
+    label = stabilize
+2 [color=green]
+0 [color=green]
+0 [style=filled]
+1 [color=green]
+1 [color=red]
+0 -> 2 [style=filled]
+1 -> 0 [style=filled]
+2 -> 0 [style=filled]
+0 -> 0 [style=dashed]
+
+
+    }
+    
