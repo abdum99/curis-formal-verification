@@ -1,0 +1,1411 @@
+
+Isolate this:
+
+    The following properties are assumed as axioms:
+        ring.ivy: id_ring.axiom1
+        ring.ivy: id_ring.axiom2
+        ring.ivy: id_ring.axiom3
+        ring.ivy: id_ring.axiom4
+        chord_stage_2_no_joins_no_pred.ivy: axiom21
+
+    The inductive invariant consists of the following conjectures:
+        partial_function.ivy: line 36: succ_1.invar6
+        partial_function.ivy: line 37: succ_1.invar7
+        partial_function.ivy: line 39: succ_1.invar8
+        partial_function.ivy: line 36: succ_2.invar6
+        partial_function.ivy: line 37: succ_2.invar7
+        partial_function.ivy: line 39: succ_2.invar8
+        path_partial_function_dom.ivy: line 45: succ.invar9
+        path_partial_function_dom.ivy: line 47: succ.invar10
+        path_partial_function_dom.ivy: line 49: succ.invar11
+        path_partial_function_dom.ivy: line 51: succ.invar12
+        path_partial_function_dom.ivy: line 53: succ.invar13
+        path_partial_function_dom.ivy: line 55: succ.invar14
+        path_partial_function_dom.ivy: line 57: succ.invar15
+        path_partial_function_dom.ivy: line 59: succ.invar16
+        path_partial_function_dom.ivy: line 61: succ.invar17
+        path_partial_function_dom.ivy: line 63: succ.invar18
+        path_partial_function_dom.ivy: line 69: succ.invar19
+        chord_stage_2_no_joins_no_pred.ivy: line 40: invar23
+        chord_stage_2_no_joins_no_pred.ivy: line 147: invar24
+        chord_stage_2_no_joins_no_pred.ivy: line 150: invar25
+        chord_stage_2_no_joins_no_pred.ivy: line 154: invar26
+        chord_stage_2_no_joins_no_pred.ivy: line 155: invar27
+        chord_stage_2_no_joins_no_pred.ivy: line 156: invar28
+        chord_stage_2_no_joins_no_pred.ivy: line 157: invar29
+        chord_stage_2_no_joins_no_pred.ivy: line 158: invar30
+        chord_stage_2_no_joins_no_pred.ivy: line 159: invar31
+        chord_stage_2_no_joins_no_pred.ivy: line 160: invar32
+        chord_stage_2_no_joins_no_pred.ivy: line 161: invar33
+        chord_stage_2_no_joins_no_pred.ivy: line 162: invar34
+        chord_stage_2_no_joins_no_pred.ivy: line 163: invar35
+        chord_stage_2_no_joins_no_pred.ivy: line 164: invar36
+        chord_stage_2_no_joins_no_pred.ivy: line 165: invar37
+        chord_stage_2_no_joins_no_pred.ivy: line 166: invar38
+        chord_stage_2_no_joins_no_pred.ivy: line 167: invar39
+        chord_stage_2_no_joins_no_pred.ivy: line 168: invar40
+        chord_stage_2_no_joins_no_pred.ivy: line 170: invar41
+        chord_stage_2_no_joins_no_pred.ivy: line 172: invar42
+        chord_stage_2_no_joins_no_pred.ivy: line 177: invar43
+        chord_stage_2_no_joins_no_pred.ivy: line 180: invar44
+        chord_stage_2_no_joins_no_pred.ivy: line 181: invar45
+        chord_stage_2_no_joins_no_pred.ivy: line 182: invar46
+        chord_stage_2_no_joins_no_pred.ivy: line 183: invar47
+        chord_stage_2_no_joins_no_pred.ivy: line 184: invar48
+        chord_stage_2_no_joins_no_pred.ivy: line 185: invar49
+        chord_stage_2_no_joins_no_pred.ivy: line 186: invar50
+        chord_stage_2_no_joins_no_pred.ivy: line 187: invar51
+        chord_stage_2_no_joins_no_pred.ivy: line 188: invar52
+        chord_stage_2_no_joins_no_pred.ivy: line 196: invar53
+        chord_stage_2_no_joins_no_pred.ivy: line 197: invar54
+        chord_stage_2_no_joins_no_pred.ivy: line 198: invar55
+        chord_stage_2_no_joins_no_pred.ivy: line 199: invar56
+        chord_stage_2_no_joins_no_pred.ivy: line 204: invar57
+        chord_stage_2_no_joins_no_pred.ivy: line 207: invar58
+        chord_stage_2_no_joins_no_pred.ivy: line 208: invar59
+        chord_stage_2_no_joins_no_pred.ivy: line 211: invar60
+        chord_stage_2_no_joins_no_pred.ivy: line 214: invar61
+        chord_stage_2_no_joins_no_pred.ivy: line 216: invar62
+        chord_stage_2_no_joins_no_pred.ivy: line 219: invar63
+        chord_stage_2_no_joins_no_pred.ivy: line 222: invar64
+        chord_stage_2_no_joins_no_pred.ivy: line 223: invar65
+        chord_stage_2_no_joins_no_pred.ivy: line 226: invar66
+        chord_stage_2_no_joins_no_pred.ivy: line 228: invar67
+        chord_stage_2_no_joins_no_pred.ivy: line 229: invar68
+
+    The following action implementations are present:
+        chord_stage_2_no_joins_no_pred.ivy: line 62: implementation of fail
+        chord_stage_2_no_joins_no_pred.ivy: line 91: implementation of stabilize
+        path_partial_function_dom.ivy: line 111: implementation of succ.remove
+        path_partial_function_dom.ivy: line 83: implementation of succ.set
+        partial_function.ivy: line 24: implementation of succ_1.get
+        partial_function.ivy: line 30: implementation of succ_1.remove
+        partial_function.ivy: line 17: implementation of succ_1.set
+        partial_function.ivy: line 24: implementation of succ_2.get
+        partial_function.ivy: line 30: implementation of succ_2.remove
+        partial_function.ivy: line 17: implementation of succ_2.set
+
+    The following initializers are present:
+        chord_stage_2_no_joins_no_pred.ivy: line 24: init[after22]
+        path_partial_function_dom.ivy: line 76: succ.init[after20]
+        partial_function.ivy: line 11: succ_1.init[after5]
+        partial_function.ivy: line 11: succ_2.init[after5]
+
+    Initialization must establish the invariant
+        partial_function.ivy: line 36: succ_1.invar6 ... PASS
+        partial_function.ivy: line 37: succ_1.invar7 ... PASS
+        partial_function.ivy: line 39: succ_1.invar8 ... PASS
+        partial_function.ivy: line 36: succ_2.invar6 ... PASS
+        partial_function.ivy: line 37: succ_2.invar7 ... PASS
+        partial_function.ivy: line 39: succ_2.invar8 ... PASS
+        path_partial_function_dom.ivy: line 45: succ.invar9 ... PASS
+        path_partial_function_dom.ivy: line 47: succ.invar10 ... PASS
+        path_partial_function_dom.ivy: line 49: succ.invar11 ... PASS
+        path_partial_function_dom.ivy: line 51: succ.invar12 ... PASS
+        path_partial_function_dom.ivy: line 53: succ.invar13 ... PASS
+        path_partial_function_dom.ivy: line 55: succ.invar14 ... PASS
+        path_partial_function_dom.ivy: line 57: succ.invar15 ... PASS
+        path_partial_function_dom.ivy: line 59: succ.invar16 ... PASS
+        path_partial_function_dom.ivy: line 61: succ.invar17 ... PASS
+        path_partial_function_dom.ivy: line 63: succ.invar18 ... PASS
+        path_partial_function_dom.ivy: line 69: succ.invar19 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 40: invar23 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 147: invar24 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 150: invar25 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 154: invar26 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 155: invar27 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 156: invar28 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 157: invar29 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 158: invar30 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 159: invar31 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 160: invar32 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 161: invar33 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 162: invar34 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 163: invar35 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 164: invar36 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 165: invar37 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 166: invar38 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 167: invar39 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 168: invar40 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 170: invar41 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 172: invar42 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 177: invar43 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 180: invar44 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 181: invar45 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 182: invar46 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 183: invar47 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 184: invar48 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 185: invar49 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 186: invar50 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 187: invar51 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 188: invar52 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 196: invar53 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 197: invar54 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 198: invar55 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 199: invar56 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 204: invar57 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 207: invar58 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 208: invar59 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 211: invar60 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 214: invar61 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 216: invar62 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 219: invar63 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 222: invar64 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 223: invar65 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 226: invar66 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 228: invar67 ... PASS
+        chord_stage_2_no_joins_no_pred.ivy: line 229: invar68 ... PASS
+
+    Any assertions in initializers must be checked ... PASS
+
+    The following set of external actions must preserve the invariant:
+        (internal) ext:fail
+            partial_function.ivy: line 36: succ_1.invar6 ... PASS
+            partial_function.ivy: line 37: succ_1.invar7 ... PASS
+            partial_function.ivy: line 39: succ_1.invar8 ... PASS
+            partial_function.ivy: line 36: succ_2.invar6 ... PASS
+            partial_function.ivy: line 37: succ_2.invar7 ... PASS
+            partial_function.ivy: line 39: succ_2.invar8 ... PASS
+            path_partial_function_dom.ivy: line 45: succ.invar9 ... PASS
+            path_partial_function_dom.ivy: line 47: succ.invar10 ... PASS
+            path_partial_function_dom.ivy: line 49: succ.invar11 ... PASS
+            path_partial_function_dom.ivy: line 51: succ.invar12 ... PASS
+            path_partial_function_dom.ivy: line 53: succ.invar13 ... PASS
+            path_partial_function_dom.ivy: line 55: succ.invar14 ... PASS
+            path_partial_function_dom.ivy: line 57: succ.invar15 ... PASS
+            path_partial_function_dom.ivy: line 59: succ.invar16 ... PASS
+            path_partial_function_dom.ivy: line 61: succ.invar17 ... PASS
+            path_partial_function_dom.ivy: line 63: succ.invar18 ... PASS
+            path_partial_function_dom.ivy: line 69: succ.invar19 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 40: invar23 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 147: invar24 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 150: invar25 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 154: invar26 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 155: invar27 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 156: invar28 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 157: invar29 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 158: invar30 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 159: invar31 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 160: invar32 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 161: invar33 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 162: invar34 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 163: invar35 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 164: invar36 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 165: invar37 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 166: invar38 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 167: invar39 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 168: invar40 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 170: invar41 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 172: invar42 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 177: invar43 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 180: invar44 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 181: invar45 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 182: invar46 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 183: invar47 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 184: invar48 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 185: invar49 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 186: invar50 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 187: invar51 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 188: invar52 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 196: invar53 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 197: invar54 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 198: invar55 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 199: invar56 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 204: invar57 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 207: invar58 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 208: invar59 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 211: invar60 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 214: invar61 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 216: invar62 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 219: invar63 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 222: invar64 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 223: invar65 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 226: invar66 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 228: invar67 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 229: invar68 ... PASS
+        (internal) ext:stabilize
+            partial_function.ivy: line 36: succ_1.invar6 ... PASS
+            partial_function.ivy: line 37: succ_1.invar7 ... PASS
+            partial_function.ivy: line 39: succ_1.invar8 ... PASS
+            partial_function.ivy: line 36: succ_2.invar6 ... PASS
+            partial_function.ivy: line 37: succ_2.invar7 ... PASS
+            partial_function.ivy: line 39: succ_2.invar8 ... PASS
+            path_partial_function_dom.ivy: line 45: succ.invar9 ... PASS
+            path_partial_function_dom.ivy: line 47: succ.invar10 ... PASS
+            path_partial_function_dom.ivy: line 49: succ.invar11 ... PASS
+            path_partial_function_dom.ivy: line 51: succ.invar12 ... PASS
+            path_partial_function_dom.ivy: line 53: succ.invar13 ... PASS
+            path_partial_function_dom.ivy: line 55: succ.invar14 ... PASS
+            path_partial_function_dom.ivy: line 57: succ.invar15 ... PASS
+            path_partial_function_dom.ivy: line 59: succ.invar16 ... PASS
+            path_partial_function_dom.ivy: line 61: succ.invar17 ... PASS
+            path_partial_function_dom.ivy: line 63: succ.invar18 ... PASS
+            path_partial_function_dom.ivy: line 69: succ.invar19 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 40: invar23 ... PASS
+            chord_stage_2_no_joins_no_pred.ivy: line 147: invar24 ... FAIL
+searching for a small model... done
+[
+    root_3 = 1
+    @X = 0
+    root_2 = 6
+    root_1 = 2
+    @Y = 1
+    a = 4
+    failed(4) = true
+    failed(0) = false
+    failed(1) = false
+    failed(2) = false
+    failed(3) = false
+    failed(5) = false
+    failed(6) = false
+    @Z = 6
+    id_ring.btw(0,1,3) = true
+    id_ring.btw(0,1,4) = true
+    id_ring.btw(0,1,5) = true
+    id_ring.btw(0,2,1) = true
+    id_ring.btw(0,2,3) = true
+    id_ring.btw(0,2,4) = true
+    id_ring.btw(0,2,5) = true
+    id_ring.btw(0,2,6) = true
+    id_ring.btw(0,3,5) = true
+    id_ring.btw(0,4,3) = true
+    id_ring.btw(0,4,5) = true
+    id_ring.btw(0,6,1) = true
+    id_ring.btw(0,6,3) = true
+    id_ring.btw(0,6,4) = true
+    id_ring.btw(0,6,5) = true
+    id_ring.btw(1,0,2) = true
+    id_ring.btw(1,0,6) = true
+    id_ring.btw(1,2,6) = true
+    id_ring.btw(1,3,0) = true
+    id_ring.btw(1,3,2) = true
+    id_ring.btw(1,3,5) = true
+    id_ring.btw(1,3,6) = true
+    id_ring.btw(1,4,0) = true
+    id_ring.btw(1,4,2) = true
+    id_ring.btw(1,4,3) = true
+    id_ring.btw(1,4,5) = true
+    id_ring.btw(1,4,6) = true
+    id_ring.btw(1,5,0) = true
+    id_ring.btw(1,5,2) = true
+    id_ring.btw(1,5,6) = true
+    id_ring.btw(2,1,0) = true
+    id_ring.btw(2,1,3) = true
+    id_ring.btw(2,1,4) = true
+    id_ring.btw(2,1,5) = true
+    id_ring.btw(2,3,0) = true
+    id_ring.btw(2,3,5) = true
+    id_ring.btw(2,4,0) = true
+    id_ring.btw(2,4,3) = true
+    id_ring.btw(2,4,5) = true
+    id_ring.btw(2,5,0) = true
+    id_ring.btw(2,6,0) = true
+    id_ring.btw(2,6,1) = true
+    id_ring.btw(2,6,3) = true
+    id_ring.btw(2,6,4) = true
+    id_ring.btw(2,6,5) = true
+    id_ring.btw(3,0,1) = true
+    id_ring.btw(3,0,2) = true
+    id_ring.btw(3,0,4) = true
+    id_ring.btw(3,0,6) = true
+    id_ring.btw(3,1,4) = true
+    id_ring.btw(3,2,1) = true
+    id_ring.btw(3,2,4) = true
+    id_ring.btw(3,2,6) = true
+    id_ring.btw(3,5,0) = true
+    id_ring.btw(3,5,1) = true
+    id_ring.btw(3,5,2) = true
+    id_ring.btw(3,5,4) = true
+    id_ring.btw(3,5,6) = true
+    id_ring.btw(3,6,1) = true
+    id_ring.btw(3,6,4) = true
+    id_ring.btw(4,0,1) = true
+    id_ring.btw(4,0,2) = true
+    id_ring.btw(4,0,6) = true
+    id_ring.btw(4,2,1) = true
+    id_ring.btw(4,2,6) = true
+    id_ring.btw(4,3,0) = true
+    id_ring.btw(4,3,1) = true
+    id_ring.btw(4,3,2) = true
+    id_ring.btw(4,3,5) = true
+    id_ring.btw(4,3,6) = true
+    id_ring.btw(4,5,0) = true
+    id_ring.btw(4,5,1) = true
+    id_ring.btw(4,5,2) = true
+    id_ring.btw(4,5,6) = true
+    id_ring.btw(4,6,1) = true
+    id_ring.btw(5,0,1) = true
+    id_ring.btw(5,0,2) = true
+    id_ring.btw(5,0,3) = true
+    id_ring.btw(5,0,4) = true
+    id_ring.btw(5,0,6) = true
+    id_ring.btw(5,1,3) = true
+    id_ring.btw(5,1,4) = true
+    id_ring.btw(5,2,1) = true
+    id_ring.btw(5,2,3) = true
+    id_ring.btw(5,2,4) = true
+    id_ring.btw(5,2,6) = true
+    id_ring.btw(5,4,3) = true
+    id_ring.btw(5,6,1) = true
+    id_ring.btw(5,6,3) = true
+    id_ring.btw(5,6,4) = true
+    id_ring.btw(6,0,2) = true
+    id_ring.btw(6,1,0) = true
+    id_ring.btw(6,1,2) = true
+    id_ring.btw(6,1,3) = true
+    id_ring.btw(6,1,4) = true
+    id_ring.btw(6,1,5) = true
+    id_ring.btw(6,3,0) = true
+    id_ring.btw(6,3,2) = true
+    id_ring.btw(6,3,5) = true
+    id_ring.btw(6,4,0) = true
+    id_ring.btw(6,4,2) = true
+    id_ring.btw(6,4,3) = true
+    id_ring.btw(6,4,5) = true
+    id_ring.btw(6,5,0) = true
+    id_ring.btw(6,5,2) = true
+    id_ring.btw(0,0,0) = false
+    id_ring.btw(0,0,1) = false
+    id_ring.btw(0,0,2) = false
+    id_ring.btw(0,0,3) = false
+    id_ring.btw(0,0,4) = false
+    id_ring.btw(0,0,5) = false
+    id_ring.btw(0,0,6) = false
+    id_ring.btw(0,1,0) = false
+    id_ring.btw(0,1,1) = false
+    id_ring.btw(0,1,2) = false
+    id_ring.btw(0,1,6) = false
+    id_ring.btw(0,2,0) = false
+    id_ring.btw(0,2,2) = false
+    id_ring.btw(0,3,0) = false
+    id_ring.btw(0,3,1) = false
+    id_ring.btw(0,3,2) = false
+    id_ring.btw(0,3,3) = false
+    id_ring.btw(0,3,4) = false
+    id_ring.btw(0,3,6) = false
+    id_ring.btw(0,4,0) = false
+    id_ring.btw(0,4,1) = false
+    id_ring.btw(0,4,2) = false
+    id_ring.btw(0,4,4) = false
+    id_ring.btw(0,4,6) = false
+    id_ring.btw(0,5,0) = false
+    id_ring.btw(0,5,1) = false
+    id_ring.btw(0,5,2) = false
+    id_ring.btw(0,5,3) = false
+    id_ring.btw(0,5,4) = false
+    id_ring.btw(0,5,5) = false
+    id_ring.btw(0,5,6) = false
+    id_ring.btw(0,6,0) = false
+    id_ring.btw(0,6,2) = false
+    id_ring.btw(0,6,6) = false
+    id_ring.btw(1,0,0) = false
+    id_ring.btw(1,0,1) = false
+    id_ring.btw(1,0,3) = false
+    id_ring.btw(1,0,4) = false
+    id_ring.btw(1,0,5) = false
+    id_ring.btw(1,1,0) = false
+    id_ring.btw(1,1,1) = false
+    id_ring.btw(1,1,2) = false
+    id_ring.btw(1,1,3) = false
+    id_ring.btw(1,1,4) = false
+    id_ring.btw(1,1,5) = false
+    id_ring.btw(1,1,6) = false
+    id_ring.btw(1,2,0) = false
+    id_ring.btw(1,2,1) = false
+    id_ring.btw(1,2,2) = false
+    id_ring.btw(1,2,3) = false
+    id_ring.btw(1,2,4) = false
+    id_ring.btw(1,2,5) = false
+    id_ring.btw(1,3,1) = false
+    id_ring.btw(1,3,3) = false
+    id_ring.btw(1,3,4) = false
+    id_ring.btw(1,4,1) = false
+    id_ring.btw(1,4,4) = false
+    id_ring.btw(1,5,1) = false
+    id_ring.btw(1,5,3) = false
+    id_ring.btw(1,5,4) = false
+    id_ring.btw(1,5,5) = false
+    id_ring.btw(1,6,0) = false
+    id_ring.btw(1,6,1) = false
+    id_ring.btw(1,6,2) = false
+    id_ring.btw(1,6,3) = false
+    id_ring.btw(1,6,4) = false
+    id_ring.btw(1,6,5) = false
+    id_ring.btw(1,6,6) = false
+    id_ring.btw(2,0,0) = false
+    id_ring.btw(2,0,1) = false
+    id_ring.btw(2,0,2) = false
+    id_ring.btw(2,0,3) = false
+    id_ring.btw(2,0,4) = false
+    id_ring.btw(2,0,5) = false
+    id_ring.btw(2,0,6) = false
+    id_ring.btw(2,1,1) = false
+    id_ring.btw(2,1,2) = false
+    id_ring.btw(2,1,6) = false
+    id_ring.btw(2,2,0) = false
+    id_ring.btw(2,2,1) = false
+    id_ring.btw(2,2,2) = false
+    id_ring.btw(2,2,3) = false
+    id_ring.btw(2,2,4) = false
+    id_ring.btw(2,2,5) = false
+    id_ring.btw(2,2,6) = false
+    id_ring.btw(2,3,1) = false
+    id_ring.btw(2,3,2) = false
+    id_ring.btw(2,3,3) = false
+    id_ring.btw(2,3,4) = false
+    id_ring.btw(2,3,6) = false
+    id_ring.btw(2,4,1) = false
+    id_ring.btw(2,4,2) = false
+    id_ring.btw(2,4,4) = false
+    id_ring.btw(2,4,6) = false
+    id_ring.btw(2,5,1) = false
+    id_ring.btw(2,5,2) = false
+    id_ring.btw(2,5,3) = false
+    id_ring.btw(2,5,4) = false
+    id_ring.btw(2,5,5) = false
+    id_ring.btw(2,5,6) = false
+    id_ring.btw(2,6,2) = false
+    id_ring.btw(2,6,6) = false
+    id_ring.btw(3,0,0) = false
+    id_ring.btw(3,0,3) = false
+    id_ring.btw(3,0,5) = false
+    id_ring.btw(3,1,0) = false
+    id_ring.btw(3,1,1) = false
+    id_ring.btw(3,1,2) = false
+    id_ring.btw(3,1,3) = false
+    id_ring.btw(3,1,5) = false
+    id_ring.btw(3,1,6) = false
+    id_ring.btw(3,2,0) = false
+    id_ring.btw(3,2,2) = false
+    id_ring.btw(3,2,3) = false
+    id_ring.btw(3,2,5) = false
+    id_ring.btw(3,3,0) = false
+    id_ring.btw(3,3,1) = false
+    id_ring.btw(3,3,2) = false
+    id_ring.btw(3,3,3) = false
+    id_ring.btw(3,3,4) = false
+    id_ring.btw(3,3,5) = false
+    id_ring.btw(3,3,6) = false
+    id_ring.btw(3,4,0) = false
+    id_ring.btw(3,4,1) = false
+    id_ring.btw(3,4,2) = false
+    id_ring.btw(3,4,3) = false
+    id_ring.btw(3,4,4) = false
+    id_ring.btw(3,4,5) = false
+    id_ring.btw(3,4,6) = false
+    id_ring.btw(3,5,3) = false
+    id_ring.btw(3,5,5) = false
+    id_ring.btw(3,6,0) = false
+    id_ring.btw(3,6,2) = false
+    id_ring.btw(3,6,3) = false
+    id_ring.btw(3,6,5) = false
+    id_ring.btw(3,6,6) = false
+    id_ring.btw(4,0,0) = false
+    id_ring.btw(4,0,3) = false
+    id_ring.btw(4,0,4) = false
+    id_ring.btw(4,0,5) = false
+    id_ring.btw(4,1,0) = false
+    id_ring.btw(4,1,1) = false
+    id_ring.btw(4,1,2) = false
+    id_ring.btw(4,1,3) = false
+    id_ring.btw(4,1,4) = false
+    id_ring.btw(4,1,5) = false
+    id_ring.btw(4,1,6) = false
+    id_ring.btw(4,2,0) = false
+    id_ring.btw(4,2,2) = false
+    id_ring.btw(4,2,3) = false
+    id_ring.btw(4,2,4) = false
+    id_ring.btw(4,2,5) = false
+    id_ring.btw(4,3,3) = false
+    id_ring.btw(4,3,4) = false
+    id_ring.btw(4,4,0) = false
+    id_ring.btw(4,4,1) = false
+    id_ring.btw(4,4,2) = false
+    id_ring.btw(4,4,3) = false
+    id_ring.btw(4,4,4) = false
+    id_ring.btw(4,4,5) = false
+    id_ring.btw(4,4,6) = false
+    id_ring.btw(4,5,3) = false
+    id_ring.btw(4,5,4) = false
+    id_ring.btw(4,5,5) = false
+    id_ring.btw(4,6,0) = false
+    id_ring.btw(4,6,2) = false
+    id_ring.btw(4,6,3) = false
+    id_ring.btw(4,6,4) = false
+    id_ring.btw(4,6,5) = false
+    id_ring.btw(4,6,6) = false
+    id_ring.btw(5,0,0) = false
+    id_ring.btw(5,0,5) = false
+    id_ring.btw(5,1,0) = false
+    id_ring.btw(5,1,1) = false
+    id_ring.btw(5,1,2) = false
+    id_ring.btw(5,1,5) = false
+    id_ring.btw(5,1,6) = false
+    id_ring.btw(5,2,0) = false
+    id_ring.btw(5,2,2) = false
+    id_ring.btw(5,2,5) = false
+    id_ring.btw(5,3,0) = false
+    id_ring.btw(5,3,1) = false
+    id_ring.btw(5,3,2) = false
+    id_ring.btw(5,3,3) = false
+    id_ring.btw(5,3,4) = false
+    id_ring.btw(5,3,5) = false
+    id_ring.btw(5,3,6) = false
+    id_ring.btw(5,4,0) = false
+    id_ring.btw(5,4,1) = false
+    id_ring.btw(5,4,2) = false
+    id_ring.btw(5,4,4) = false
+    id_ring.btw(5,4,5) = false
+    id_ring.btw(5,4,6) = false
+    id_ring.btw(5,5,0) = false
+    id_ring.btw(5,5,1) = false
+    id_ring.btw(5,5,2) = false
+    id_ring.btw(5,5,3) = false
+    id_ring.btw(5,5,4) = false
+    id_ring.btw(5,5,5) = false
+    id_ring.btw(5,5,6) = false
+    id_ring.btw(5,6,0) = false
+    id_ring.btw(5,6,2) = false
+    id_ring.btw(5,6,5) = false
+    id_ring.btw(5,6,6) = false
+    id_ring.btw(6,0,0) = false
+    id_ring.btw(6,0,1) = false
+    id_ring.btw(6,0,3) = false
+    id_ring.btw(6,0,4) = false
+    id_ring.btw(6,0,5) = false
+    id_ring.btw(6,0,6) = false
+    id_ring.btw(6,1,1) = false
+    id_ring.btw(6,1,6) = false
+    id_ring.btw(6,2,0) = false
+    id_ring.btw(6,2,1) = false
+    id_ring.btw(6,2,2) = false
+    id_ring.btw(6,2,3) = false
+    id_ring.btw(6,2,4) = false
+    id_ring.btw(6,2,5) = false
+    id_ring.btw(6,2,6) = false
+    id_ring.btw(6,3,1) = false
+    id_ring.btw(6,3,3) = false
+    id_ring.btw(6,3,4) = false
+    id_ring.btw(6,3,6) = false
+    id_ring.btw(6,4,1) = false
+    id_ring.btw(6,4,4) = false
+    id_ring.btw(6,4,6) = false
+    id_ring.btw(6,5,1) = false
+    id_ring.btw(6,5,3) = false
+    id_ring.btw(6,5,4) = false
+    id_ring.btw(6,5,5) = false
+    id_ring.btw(6,5,6) = false
+    id_ring.btw(6,6,0) = false
+    id_ring.btw(6,6,1) = false
+    id_ring.btw(6,6,2) = false
+    id_ring.btw(6,6,3) = false
+    id_ring.btw(6,6,4) = false
+    id_ring.btw(6,6,5) = false
+    id_ring.btw(6,6,6) = false
+    succ_2.a = 5
+    succ.a = 4
+    succ_1.a = 4
+    active(0) = true
+    active(1) = true
+    active(2) = true
+    active(3) = true
+    active(4) = true
+    active(5) = true
+    active(6) = true
+    succ_1.dom(0) = true
+    succ_1.dom(1) = true
+    succ_1.dom(2) = true
+    succ_1.dom(3) = true
+    succ_1.dom(5) = true
+    succ_1.dom(6) = true
+    succ_1.dom(4) = false
+    succ.f(1,4) = true
+    succ.f(2,6) = true
+    succ.f(3,5) = true
+    succ.f(6,1) = true
+    succ.f(0,0) = false
+    succ.f(0,1) = false
+    succ.f(0,2) = false
+    succ.f(0,3) = false
+    succ.f(0,4) = false
+    succ.f(0,5) = false
+    succ.f(0,6) = false
+    succ.f(1,0) = false
+    succ.f(1,1) = false
+    succ.f(1,2) = false
+    succ.f(1,3) = false
+    succ.f(1,5) = false
+    succ.f(1,6) = false
+    succ.f(2,0) = false
+    succ.f(2,1) = false
+    succ.f(2,2) = false
+    succ.f(2,3) = false
+    succ.f(2,4) = false
+    succ.f(2,5) = false
+    succ.f(3,0) = false
+    succ.f(3,1) = false
+    succ.f(3,2) = false
+    succ.f(3,3) = false
+    succ.f(3,4) = false
+    succ.f(3,6) = false
+    succ.f(4,0) = false
+    succ.f(4,1) = false
+    succ.f(4,2) = false
+    succ.f(4,3) = false
+    succ.f(4,4) = false
+    succ.f(4,5) = false
+    succ.f(4,6) = false
+    succ.f(5,0) = false
+    succ.f(5,1) = false
+    succ.f(5,2) = false
+    succ.f(5,3) = false
+    succ.f(5,4) = false
+    succ.f(5,5) = false
+    succ.f(5,6) = false
+    succ.f(6,0) = false
+    succ.f(6,2) = false
+    succ.f(6,3) = false
+    succ.f(6,4) = false
+    succ.f(6,5) = false
+    succ.f(6,6) = false
+    succ_2.dom(0) = true
+    succ_2.dom(1) = true
+    succ_2.dom(2) = true
+    succ_2.dom(3) = true
+    succ_2.dom(5) = true
+    succ_2.dom(6) = true
+    succ_2.dom(4) = false
+    succ.dom(0) = true
+    succ.dom(1) = true
+    succ.dom(2) = true
+    succ.dom(3) = true
+    succ.dom(5) = true
+    succ.dom(6) = true
+    succ.dom(4) = false
+    succ_1.f(1,4) = true
+    succ_1.f(2,6) = true
+    succ_1.f(3,5) = true
+    succ_1.f(6,1) = true
+    succ_1.f(0,0) = false
+    succ_1.f(0,1) = false
+    succ_1.f(0,2) = false
+    succ_1.f(0,3) = false
+    succ_1.f(0,4) = false
+    succ_1.f(0,5) = false
+    succ_1.f(0,6) = false
+    succ_1.f(1,0) = false
+    succ_1.f(1,1) = false
+    succ_1.f(1,2) = false
+    succ_1.f(1,3) = false
+    succ_1.f(1,5) = false
+    succ_1.f(1,6) = false
+    succ_1.f(2,0) = false
+    succ_1.f(2,1) = false
+    succ_1.f(2,2) = false
+    succ_1.f(2,3) = false
+    succ_1.f(2,4) = false
+    succ_1.f(2,5) = false
+    succ_1.f(3,0) = false
+    succ_1.f(3,1) = false
+    succ_1.f(3,2) = false
+    succ_1.f(3,3) = false
+    succ_1.f(3,4) = false
+    succ_1.f(3,6) = false
+    succ_1.f(4,0) = false
+    succ_1.f(4,1) = false
+    succ_1.f(4,2) = false
+    succ_1.f(4,3) = false
+    succ_1.f(4,4) = false
+    succ_1.f(4,5) = false
+    succ_1.f(4,6) = false
+    succ_1.f(5,0) = false
+    succ_1.f(5,1) = false
+    succ_1.f(5,2) = false
+    succ_1.f(5,3) = false
+    succ_1.f(5,4) = false
+    succ_1.f(5,5) = false
+    succ_1.f(5,6) = false
+    succ_1.f(6,0) = false
+    succ_1.f(6,2) = false
+    succ_1.f(6,3) = false
+    succ_1.f(6,4) = false
+    succ_1.f(6,5) = false
+    succ_1.f(6,6) = false
+    succ_2.f(1,3) = true
+    succ_2.f(2,1) = true
+    succ_2.f(5,0) = true
+    succ_2.f(6,4) = true
+    succ_2.f(0,0) = false
+    succ_2.f(0,1) = false
+    succ_2.f(0,2) = false
+    succ_2.f(0,3) = false
+    succ_2.f(0,4) = false
+    succ_2.f(0,5) = false
+    succ_2.f(0,6) = false
+    succ_2.f(1,0) = false
+    succ_2.f(1,1) = false
+    succ_2.f(1,2) = false
+    succ_2.f(1,4) = false
+    succ_2.f(1,5) = false
+    succ_2.f(1,6) = false
+    succ_2.f(2,0) = false
+    succ_2.f(2,2) = false
+    succ_2.f(2,3) = false
+    succ_2.f(2,4) = false
+    succ_2.f(2,5) = false
+    succ_2.f(2,6) = false
+    succ_2.f(3,0) = false
+    succ_2.f(3,1) = false
+    succ_2.f(3,2) = false
+    succ_2.f(3,3) = false
+    succ_2.f(3,4) = false
+    succ_2.f(3,5) = false
+    succ_2.f(3,6) = false
+    succ_2.f(4,0) = false
+    succ_2.f(4,1) = false
+    succ_2.f(4,2) = false
+    succ_2.f(4,3) = false
+    succ_2.f(4,4) = false
+    succ_2.f(4,5) = false
+    succ_2.f(4,6) = false
+    succ_2.f(5,1) = false
+    succ_2.f(5,2) = false
+    succ_2.f(5,3) = false
+    succ_2.f(5,4) = false
+    succ_2.f(5,5) = false
+    succ_2.f(5,6) = false
+    succ_2.f(6,0) = false
+    succ_2.f(6,1) = false
+    succ_2.f(6,2) = false
+    succ_2.f(6,3) = false
+    succ_2.f(6,5) = false
+    succ_2.f(6,6) = false
+    succ.p(0,1,1) = true
+    succ.p(0,1,4) = true
+    succ.p(0,4,4) = true
+    succ.p(1,4,4) = true
+    succ.p(2,1,1) = true
+    succ.p(2,1,4) = true
+    succ.p(2,4,4) = true
+    succ.p(2,6,1) = true
+    succ.p(2,6,4) = true
+    succ.p(2,6,6) = true
+    succ.p(3,1,1) = true
+    succ.p(3,1,4) = true
+    succ.p(3,4,4) = true
+    succ.p(3,5,1) = true
+    succ.p(3,5,4) = true
+    succ.p(3,5,5) = true
+    succ.p(3,5,6) = true
+    succ.p(3,6,1) = true
+    succ.p(3,6,4) = true
+    succ.p(3,6,6) = true
+    succ.p(5,1,1) = true
+    succ.p(5,1,4) = true
+    succ.p(5,4,4) = true
+    succ.p(5,6,1) = true
+    succ.p(5,6,4) = true
+    succ.p(5,6,6) = true
+    succ.p(6,1,1) = true
+    succ.p(6,1,4) = true
+    succ.p(6,4,4) = true
+    succ.p(0,0,0) = false
+    succ.p(0,0,1) = false
+    succ.p(0,0,2) = false
+    succ.p(0,0,3) = false
+    succ.p(0,0,4) = false
+    succ.p(0,0,5) = false
+    succ.p(0,0,6) = false
+    succ.p(0,1,0) = false
+    succ.p(0,1,2) = false
+    succ.p(0,1,3) = false
+    succ.p(0,1,5) = false
+    succ.p(0,1,6) = false
+    succ.p(0,2,0) = false
+    succ.p(0,2,1) = false
+    succ.p(0,2,2) = false
+    succ.p(0,2,3) = false
+    succ.p(0,2,4) = false
+    succ.p(0,2,5) = false
+    succ.p(0,2,6) = false
+    succ.p(0,3,0) = false
+    succ.p(0,3,1) = false
+    succ.p(0,3,2) = false
+    succ.p(0,3,3) = false
+    succ.p(0,3,4) = false
+    succ.p(0,3,5) = false
+    succ.p(0,3,6) = false
+    succ.p(0,4,0) = false
+    succ.p(0,4,1) = false
+    succ.p(0,4,2) = false
+    succ.p(0,4,3) = false
+    succ.p(0,4,5) = false
+    succ.p(0,4,6) = false
+    succ.p(0,5,0) = false
+    succ.p(0,5,1) = false
+    succ.p(0,5,2) = false
+    succ.p(0,5,3) = false
+    succ.p(0,5,4) = false
+    succ.p(0,5,5) = false
+    succ.p(0,5,6) = false
+    succ.p(0,6,0) = false
+    succ.p(0,6,1) = false
+    succ.p(0,6,2) = false
+    succ.p(0,6,3) = false
+    succ.p(0,6,4) = false
+    succ.p(0,6,5) = false
+    succ.p(0,6,6) = false
+    succ.p(1,0,0) = false
+    succ.p(1,0,1) = false
+    succ.p(1,0,2) = false
+    succ.p(1,0,3) = false
+    succ.p(1,0,4) = false
+    succ.p(1,0,5) = false
+    succ.p(1,0,6) = false
+    succ.p(1,1,0) = false
+    succ.p(1,1,1) = false
+    succ.p(1,1,2) = false
+    succ.p(1,1,3) = false
+    succ.p(1,1,4) = false
+    succ.p(1,1,5) = false
+    succ.p(1,1,6) = false
+    succ.p(1,2,0) = false
+    succ.p(1,2,1) = false
+    succ.p(1,2,2) = false
+    succ.p(1,2,3) = false
+    succ.p(1,2,4) = false
+    succ.p(1,2,5) = false
+    succ.p(1,2,6) = false
+    succ.p(1,3,0) = false
+    succ.p(1,3,1) = false
+    succ.p(1,3,2) = false
+    succ.p(1,3,3) = false
+    succ.p(1,3,4) = false
+    succ.p(1,3,5) = false
+    succ.p(1,3,6) = false
+    succ.p(1,4,0) = false
+    succ.p(1,4,1) = false
+    succ.p(1,4,2) = false
+    succ.p(1,4,3) = false
+    succ.p(1,4,5) = false
+    succ.p(1,4,6) = false
+    succ.p(1,5,0) = false
+    succ.p(1,5,1) = false
+    succ.p(1,5,2) = false
+    succ.p(1,5,3) = false
+    succ.p(1,5,4) = false
+    succ.p(1,5,5) = false
+    succ.p(1,5,6) = false
+    succ.p(1,6,0) = false
+    succ.p(1,6,1) = false
+    succ.p(1,6,2) = false
+    succ.p(1,6,3) = false
+    succ.p(1,6,4) = false
+    succ.p(1,6,5) = false
+    succ.p(1,6,6) = false
+    succ.p(2,0,0) = false
+    succ.p(2,0,1) = false
+    succ.p(2,0,2) = false
+    succ.p(2,0,3) = false
+    succ.p(2,0,4) = false
+    succ.p(2,0,5) = false
+    succ.p(2,0,6) = false
+    succ.p(2,1,0) = false
+    succ.p(2,1,2) = false
+    succ.p(2,1,3) = false
+    succ.p(2,1,5) = false
+    succ.p(2,1,6) = false
+    succ.p(2,2,0) = false
+    succ.p(2,2,1) = false
+    succ.p(2,2,2) = false
+    succ.p(2,2,3) = false
+    succ.p(2,2,4) = false
+    succ.p(2,2,5) = false
+    succ.p(2,2,6) = false
+    succ.p(2,3,0) = false
+    succ.p(2,3,1) = false
+    succ.p(2,3,2) = false
+    succ.p(2,3,3) = false
+    succ.p(2,3,4) = false
+    succ.p(2,3,5) = false
+    succ.p(2,3,6) = false
+    succ.p(2,4,0) = false
+    succ.p(2,4,1) = false
+    succ.p(2,4,2) = false
+    succ.p(2,4,3) = false
+    succ.p(2,4,5) = false
+    succ.p(2,4,6) = false
+    succ.p(2,5,0) = false
+    succ.p(2,5,1) = false
+    succ.p(2,5,2) = false
+    succ.p(2,5,3) = false
+    succ.p(2,5,4) = false
+    succ.p(2,5,5) = false
+    succ.p(2,5,6) = false
+    succ.p(2,6,0) = false
+    succ.p(2,6,2) = false
+    succ.p(2,6,3) = false
+    succ.p(2,6,5) = false
+    succ.p(3,0,0) = false
+    succ.p(3,0,1) = false
+    succ.p(3,0,2) = false
+    succ.p(3,0,3) = false
+    succ.p(3,0,4) = false
+    succ.p(3,0,5) = false
+    succ.p(3,0,6) = false
+    succ.p(3,1,0) = false
+    succ.p(3,1,2) = false
+    succ.p(3,1,3) = false
+    succ.p(3,1,5) = false
+    succ.p(3,1,6) = false
+    succ.p(3,2,0) = false
+    succ.p(3,2,1) = false
+    succ.p(3,2,2) = false
+    succ.p(3,2,3) = false
+    succ.p(3,2,4) = false
+    succ.p(3,2,5) = false
+    succ.p(3,2,6) = false
+    succ.p(3,3,0) = false
+    succ.p(3,3,1) = false
+    succ.p(3,3,2) = false
+    succ.p(3,3,3) = false
+    succ.p(3,3,4) = false
+    succ.p(3,3,5) = false
+    succ.p(3,3,6) = false
+    succ.p(3,4,0) = false
+    succ.p(3,4,1) = false
+    succ.p(3,4,2) = false
+    succ.p(3,4,3) = false
+    succ.p(3,4,5) = false
+    succ.p(3,4,6) = false
+    succ.p(3,5,0) = false
+    succ.p(3,5,2) = false
+    succ.p(3,5,3) = false
+    succ.p(3,6,0) = false
+    succ.p(3,6,2) = false
+    succ.p(3,6,3) = false
+    succ.p(3,6,5) = false
+    succ.p(4,0,0) = false
+    succ.p(4,0,1) = false
+    succ.p(4,0,2) = false
+    succ.p(4,0,3) = false
+    succ.p(4,0,4) = false
+    succ.p(4,0,5) = false
+    succ.p(4,0,6) = false
+    succ.p(4,1,0) = false
+    succ.p(4,1,1) = false
+    succ.p(4,1,2) = false
+    succ.p(4,1,3) = false
+    succ.p(4,1,4) = false
+    succ.p(4,1,5) = false
+    succ.p(4,1,6) = false
+    succ.p(4,2,0) = false
+    succ.p(4,2,1) = false
+    succ.p(4,2,2) = false
+    succ.p(4,2,3) = false
+    succ.p(4,2,4) = false
+    succ.p(4,2,5) = false
+    succ.p(4,2,6) = false
+    succ.p(4,3,0) = false
+    succ.p(4,3,1) = false
+    succ.p(4,3,2) = false
+    succ.p(4,3,3) = false
+    succ.p(4,3,4) = false
+    succ.p(4,3,5) = false
+    succ.p(4,3,6) = false
+    succ.p(4,4,0) = false
+    succ.p(4,4,1) = false
+    succ.p(4,4,2) = false
+    succ.p(4,4,3) = false
+    succ.p(4,4,4) = false
+    succ.p(4,4,5) = false
+    succ.p(4,4,6) = false
+    succ.p(4,5,0) = false
+    succ.p(4,5,1) = false
+    succ.p(4,5,2) = false
+    succ.p(4,5,3) = false
+    succ.p(4,5,4) = false
+    succ.p(4,5,5) = false
+    succ.p(4,5,6) = false
+    succ.p(4,6,0) = false
+    succ.p(4,6,1) = false
+    succ.p(4,6,2) = false
+    succ.p(4,6,3) = false
+    succ.p(4,6,4) = false
+    succ.p(4,6,5) = false
+    succ.p(4,6,6) = false
+    succ.p(5,0,0) = false
+    succ.p(5,0,1) = false
+    succ.p(5,0,2) = false
+    succ.p(5,0,3) = false
+    succ.p(5,0,4) = false
+    succ.p(5,0,5) = false
+    succ.p(5,0,6) = false
+    succ.p(5,1,0) = false
+    succ.p(5,1,2) = false
+    succ.p(5,1,3) = false
+    succ.p(5,1,5) = false
+    succ.p(5,1,6) = false
+    succ.p(5,2,0) = false
+    succ.p(5,2,1) = false
+    succ.p(5,2,2) = false
+    succ.p(5,2,3) = false
+    succ.p(5,2,4) = false
+    succ.p(5,2,5) = false
+    succ.p(5,2,6) = false
+    succ.p(5,3,0) = false
+    succ.p(5,3,1) = false
+    succ.p(5,3,2) = false
+    succ.p(5,3,3) = false
+    succ.p(5,3,4) = false
+    succ.p(5,3,5) = false
+    succ.p(5,3,6) = false
+    succ.p(5,4,0) = false
+    succ.p(5,4,1) = false
+    succ.p(5,4,2) = false
+    succ.p(5,4,3) = false
+    succ.p(5,4,5) = false
+    succ.p(5,4,6) = false
+    succ.p(5,5,0) = false
+    succ.p(5,5,1) = false
+    succ.p(5,5,2) = false
+    succ.p(5,5,3) = false
+    succ.p(5,5,4) = false
+    succ.p(5,5,5) = false
+    succ.p(5,5,6) = false
+    succ.p(5,6,0) = false
+    succ.p(5,6,2) = false
+    succ.p(5,6,3) = false
+    succ.p(5,6,5) = false
+    succ.p(6,0,0) = false
+    succ.p(6,0,1) = false
+    succ.p(6,0,2) = false
+    succ.p(6,0,3) = false
+    succ.p(6,0,4) = false
+    succ.p(6,0,5) = false
+    succ.p(6,0,6) = false
+    succ.p(6,1,0) = false
+    succ.p(6,1,2) = false
+    succ.p(6,1,3) = false
+    succ.p(6,1,5) = false
+    succ.p(6,1,6) = false
+    succ.p(6,2,0) = false
+    succ.p(6,2,1) = false
+    succ.p(6,2,2) = false
+    succ.p(6,2,3) = false
+    succ.p(6,2,4) = false
+    succ.p(6,2,5) = false
+    succ.p(6,2,6) = false
+    succ.p(6,3,0) = false
+    succ.p(6,3,1) = false
+    succ.p(6,3,2) = false
+    succ.p(6,3,3) = false
+    succ.p(6,3,4) = false
+    succ.p(6,3,5) = false
+    succ.p(6,3,6) = false
+    succ.p(6,4,0) = false
+    succ.p(6,4,1) = false
+    succ.p(6,4,2) = false
+    succ.p(6,4,3) = false
+    succ.p(6,4,5) = false
+    succ.p(6,4,6) = false
+    succ.p(6,5,0) = false
+    succ.p(6,5,1) = false
+    succ.p(6,5,2) = false
+    succ.p(6,5,3) = false
+    succ.p(6,5,4) = false
+    succ.p(6,5,5) = false
+    succ.p(6,5,6) = false
+    succ.p(6,6,0) = false
+    succ.p(6,6,1) = false
+    succ.p(6,6,2) = false
+    succ.p(6,6,3) = false
+    succ.p(6,6,4) = false
+    succ.p(6,6,5) = false
+    succ.p(6,6,6) = false
+]
+call stabilize
+
+{
+    [
+        fml:x = 1
+    ]
+    chord_stage_2_no_joins_no_pred.ivy: line 92: assume active(fml:x)
+
+    chord_stage_2_no_joins_no_pred.ivy: line 93: assume ~failed(fml:x)
+
+    [
+        fml:y = 4
+    ]
+    chord_stage_2_no_joins_no_pred.ivy: line 95: call loc:0 := succ_1.get(fml:x)
+    {
+        [
+            fml:x_a = 1
+        ]
+        partial_function.ivy: line 25: assert succ_1.dom(fml:x)
+
+        partial_function.ivy: line 26: assume succ_1.f(fml:x,fml:y)
+
+    }
+
+    [
+        loc:0 = 4
+    ]
+    chord_stage_2_no_joins_no_pred.ivy: line 95: loc:s_1 := loc:0
+
+    [
+        fml:y = 3
+        loc:s_1 = 4
+    ]
+    chord_stage_2_no_joins_no_pred.ivy: line 96: call loc:0 := succ_2.get(fml:x)
+    {
+        partial_function.ivy: line 25: assert succ_2.dom(fml:x)
+
+        partial_function.ivy: line 26: assume succ_2.f(fml:x,fml:y)
+
+    }
+
+    [
+        fml:y = 4
+        loc:0 = 3
+    ]
+    chord_stage_2_no_joins_no_pred.ivy: line 96: loc:s_2 := loc:0
+
+    [
+        loc:s_2 = 3
+    ]
+    chord_stage_2_no_joins_no_pred.ivy: line 99: assume ~failed(loc:s_1) | ~failed(loc:s_2)
+
+    chord_stage_2_no_joins_no_pred.ivy: line 103: call succ_1.remove(fml:x)
+    {
+        partial_function.ivy: line 31: assert succ_1.dom(fml:x)
+
+        partial_function.ivy: line 32: succ_1.f(fml:x,Y) := false
+
+        [
+            succ_1.f(1,4) = false
+        ]
+        partial_function.ivy: line 33: succ_1.dom(fml:x) := false
+
+        [
+            succ_1.dom(1) = false
+        ]
+    }
+
+    chord_stage_2_no_joins_no_pred.ivy: line 104: call succ.remove(fml:x)
+    {
+        path_partial_function_dom.ivy: line 112: assert succ.dom(fml:x)
+
+        path_partial_function_dom.ivy: line 113: succ.p(W,U,V) := succ.p(W,U,V) & W ~= fml:x & (succ.p(W,fml:x,fml:x) -> succ.p(W,V,fml:x))
+
+        [
+            succ.p(0,1,4) = false
+            succ.p(0,4,4) = false
+            succ.p(1,4,4) = false
+            succ.p(2,1,4) = false
+            succ.p(2,4,4) = false
+            succ.p(2,6,4) = false
+            succ.p(3,1,4) = false
+            succ.p(3,4,4) = false
+            succ.p(3,5,4) = false
+            succ.p(3,6,4) = false
+            succ.p(5,1,4) = false
+            succ.p(5,4,4) = false
+            succ.p(5,6,4) = false
+            succ.p(6,1,4) = false
+            succ.p(6,4,4) = false
+        ]
+        path_partial_function_dom.ivy: line 114: succ.f(fml:x,Y) := false
+
+        [
+            succ.f(1,4) = false
+        ]
+        path_partial_function_dom.ivy: line 115: succ.dom(fml:x) := false
+
+        [
+            succ.dom(1) = false
+        ]
+    }
+
+    [
+        fml:y = 5
+    ]
+    chord_stage_2_no_joins_no_pred.ivy: line 105: call succ_1.set(fml:x, loc:s_2)
+    {
+        [
+            fml:y = 3
+        ]
+        partial_function.ivy: line 18: assert ~succ_1.dom(fml:x)
+
+        partial_function.ivy: line 19: succ_1.f(fml:x,Y) := Y:id = fml:y
+
+        [
+            succ_1.f(1,3) = true
+        ]
+        partial_function.ivy: line 20: succ_1.dom(fml:x) := true
+
+        [
+            succ_1.dom(1) = true
+        ]
+    }
+
+    [
+        fml:y = 5
+    ]
+    chord_stage_2_no_joins_no_pred.ivy: line 106: call succ.set(fml:x, loc:s_2)
+    {
+        [
+            fml:y = 3
+        ]
+        path_partial_function_dom.ivy: line 84: assert ~succ.dom(fml:x)
+
+        path_partial_function_dom.ivy: line 86: succ.p(W,U,V) := succ.p(W,U,V) | ~succ.p(W,V,V) & (succ.p(W,fml:x,fml:x) | W = fml:x) & ((succ.p(W,U,fml:x) | U = fml:y) & (succ.p(fml:y,V,V) | V = fml:y) | succ.p(fml:y,U,V) & V ~= fml:y)
+
+        [
+            succ.p(0,1,3) = true
+            succ.p(0,1,5) = true
+            succ.p(0,1,6) = true
+            succ.p(0,3,3) = true
+            succ.p(0,3,5) = true
+            succ.p(0,3,6) = true
+            succ.p(0,5,5) = true
+            succ.p(0,5,6) = true
+            succ.p(0,6,6) = true
+            succ.p(1,1,1) = true
+            succ.p(1,3,1) = true
+            succ.p(1,3,3) = true
+            succ.p(1,3,5) = true
+            succ.p(1,3,6) = true
+            succ.p(1,5,1) = true
+            succ.p(1,5,5) = true
+            succ.p(1,5,6) = true
+            succ.p(1,6,1) = true
+            succ.p(1,6,6) = true
+            succ.p(2,1,3) = true
+            succ.p(2,1,5) = true
+            succ.p(2,3,3) = true
+            succ.p(2,3,5) = true
+            succ.p(2,5,5) = true
+            succ.p(2,6,3) = true
+            succ.p(2,6,5) = true
+            succ.p(3,1,3) = true
+            succ.p(3,3,3) = true
+            succ.p(3,5,3) = true
+            succ.p(3,6,3) = true
+            succ.p(5,1,3) = true
+            succ.p(5,1,5) = true
+            succ.p(5,3,3) = true
+            succ.p(5,3,5) = true
+            succ.p(5,5,5) = true
+            succ.p(5,6,3) = true
+            succ.p(5,6,5) = true
+            succ.p(6,1,3) = true
+            succ.p(6,1,5) = true
+            succ.p(6,1,6) = true
+            succ.p(6,3,3) = true
+            succ.p(6,3,5) = true
+            succ.p(6,3,6) = true
+            succ.p(6,5,5) = true
+            succ.p(6,5,6) = true
+            succ.p(6,6,6) = true
+        ]
+        path_partial_function_dom.ivy: line 91: succ.f(fml:x,Y) := fml:y = Y
+
+        [
+            succ.f(1,3) = true
+        ]
+        path_partial_function_dom.ivy: line 92: succ.dom(fml:x) := true
+
+        [
+            succ.dom(1) = true
+        ]
+    }
+
+    [
+        fml:y = 5
+    ]
+    chord_stage_2_no_joins_no_pred.ivy: line 109: call loc:s_1 := succ_1.get(fml:x)
+    {
+        partial_function.ivy: line 25: assert succ_1.dom(fml:x)
+
+        partial_function.ivy: line 26: assume succ_1.f(fml:x,fml:y)
+
+    }
+
+    [
+        fml:y = 4
+        loc:s_1 = 3
+    ]
+    chord_stage_2_no_joins_no_pred.ivy: line 110: assert ~failed(loc:s_1)
+
+    [
+        fml:y = 3
+    ]
+    chord_stage_2_no_joins_no_pred.ivy: line 122: call loc:s_1 := succ_1.get(fml:x)
+    {
+        partial_function.ivy: line 25: assert succ_1.dom(fml:x)
+
+        partial_function.ivy: line 26: assume succ_1.f(fml:x,fml:y)
+
+    }
+
+    [
+        fml:y = 5
+    ]
+    chord_stage_2_no_joins_no_pred.ivy: line 138: call loc:s_2 := succ_1.get(loc:s_1)
+    {
+        [
+            fml:x = 3
+        ]
+        partial_function.ivy: line 25: assert succ_1.dom(fml:x)
+
+        partial_function.ivy: line 26: assume succ_1.f(fml:x,fml:y)
+
+    }
+
+    [
+        fml:y = 4
+        loc:s_2 = 5
+        fml:x = 1
+    ]
+    chord_stage_2_no_joins_no_pred.ivy: line 139: call succ_2.remove(fml:x)
+    {
+        partial_function.ivy: line 31: assert succ_2.dom(fml:x)
+
+        partial_function.ivy: line 32: succ_2.f(fml:x,Y) := false
+
+        [
+            succ_2.f(1,3) = false
+        ]
+        partial_function.ivy: line 33: succ_2.dom(fml:x) := false
+
+        [
+            succ_2.dom(1) = false
+        ]
+    }
+
+    [
+        fml:y = 5
+    ]
+    chord_stage_2_no_joins_no_pred.ivy: line 140: call succ_2.set(fml:x, loc:s_2)
+    {
+        partial_function.ivy: line 18: assert ~succ_2.dom(fml:x)
+
+        partial_function.ivy: line 19: succ_2.f(fml:x,Y) := Y:id = fml:y
+
+        [
+            succ_2.f(1,5) = true
+        ]
+        partial_function.ivy: line 20: succ_2.dom(fml:x) := true
+
+        [
+            succ_2.dom(1) = true
+        ]
+    }
+
+    [
+        fml:y = 4
+    ]
+}
+
+
