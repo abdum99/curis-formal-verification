@@ -204,7 +204,7 @@ invariant succ_1.f(X, S) & active(Y) & ~failed(Y) -> ~id_ring.btw(X, Y, S) # fro
 invariant succ_2.f(X, S2) & active(Y) & ~failed(Y) & id_ring.btw(X, Y, S2) -> succ_1.f(X, Y) # from chord40.dot
 # (WRONG) invariant succ_2.f(X, S2) & active(Y) & id_ring.btw(X, Y, S2) -> succ_1.f(X, Y) # from chord37.dot (wrong when Y has failed)
 
-invariant X ~= Y & X ~= Z & Y ~= Z & succ.p(X, Y, Z) -> id_ring.btw(X, Y, Z)
+# (correct, but file verifies without it) invariant X ~= Y & X ~= Z & Y ~= Z & succ.p(X, Y, Z) -> id_ring.btw(X, Y, Z)
 invariant succ.p(X, Z, Z) & id_ring.btw(X, Y, Z) & active(Y) & ~failed(Y) -> succ.p(X, Y, Z) # from chord39.dot
 
 # (correct, but file verifies without it) invariant succ.p(X, X, X) & X ~= Y & succ_2.f(Y, Z) & succ.p(Z, Y, Y) -> succ.p(Z, X, X) # from chord33.dot
