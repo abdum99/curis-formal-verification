@@ -181,6 +181,9 @@ invariant succ.p(X, Y, Y) -> active(X) & ~failed(X)
 invariant succ.p(X, Y, Y) -> active(Y)
 invariant succ.dom(X) <-> active(X) & ~failed(X)
 
+invariant succ_1.f(X, Y) <-> succ.f(X, Y)
+invariant succ.p(X, Y, Z) -> succ_1.dom(X)
+
 # only active nodes can be each other predecessors (since there are no failures)
 # invariant pred.dom(X) -> active(X) & ~failed(X)
 # invariant pred.f(X, Y) -> active(X) & active(Y)
@@ -189,8 +192,6 @@ invariant succ.dom(X) <-> active(X) & ~failed(X)
 # immediate successors are reachable
 # (correct, but file verifies without it) invariant succ_1.f(X, Y) -> succ.p(X, Y, Y)
 # (correct, but file verifies without it) invariant succ_1.f(X, S) & succ.p(X, Y, Y) & ~failed(S) -> succ.p(X, S, Y) # (NEW) from chord22.dot
-invariant succ_1.f(X, Y) <-> succ.f(X, Y)
-invariant succ.p(X, Y, Z) -> succ_1.dom(X)
 
 # INVARIANTS (non-trivial)
 
