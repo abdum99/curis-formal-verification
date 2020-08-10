@@ -1,6 +1,7 @@
 #lang ivy1.7
 
-# assumptions: nodes can join anywhere, root don't fail, there are at least 3 nodes in the system
+# assumptions: nodes can join anywhere, root can fail
+
 include ring
 include partial_function
 include path_partial_function_dom
