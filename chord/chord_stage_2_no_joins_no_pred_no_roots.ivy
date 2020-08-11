@@ -1,6 +1,6 @@
 #lang ivy1.7
 
-# assumptions: nodes can join anywhere, root can fail
+# assumptions: there are no nodes joining, there is no pred relation, root can fail, at least one of the node's successors is alive
 
 include ring
 include partial_function
@@ -168,13 +168,13 @@ invariant succ.p(X, Y, Z) -> succ_1.dom(X)
 
 # INVARIANTS (non-trivial)
 
-# (WRONG) invariant succ_1.f(X, S1) & succ_2.f(X, S2) -> id_ring.btw(X, S1, S2) # (wrong when they are not all   different)
+# (WRONG) invariant succ_1.f(X, S1) & succ_2.f(X, S2) -> id_ring.btw(X, S1, S2) # (wrong when they are not all different)
 invariant succ_1.f(X, S1) & succ_2.f(X, S2) & X ~= S1 & X ~= S2 & S1 ~= S2 -> id_ring.btw(X, S1, S2)
 
 # if three nodes are on a cycle, they should follow btw relations
 invariant succ.p(X, Y, Z) & succ.p(X, X, X) & X ~= Y & X ~= Z & Y ~= Z -> id_ring.btw(X, Y, Z)
 
-invariant succ_1.f(X, S) & active(Y) & ~failed(Y) -> ~id_ring.btw(X, Y, S) # from chord36.dot
+#  (correct, but file verifies without it) invariant succ_1.f(X, S) & active(Y) & ~failed(Y) -> ~id_ring.btw(X, Y, S) # from chord36.dot
 invariant succ_2.f(X, S2) & active(Y) & ~failed(Y) & id_ring.btw(X, Y, S2) -> succ_1.f(X, Y) # from chord40.dot
 # (WRONG) invariant succ_2.f(X, S2) & active(Y) & id_ring.btw(X, Y, S2) -> succ_1.f(X, Y) # from chord37.dot (wrong when Y has failed)
 
@@ -185,10 +185,10 @@ invariant succ.p(X, X, X) & X ~= Y & succ_2.f(Y, Z) & succ.p(Z, Y, Y) -> succ.p(
 # (WRONG) succ_2 can't use node to reach cycle node
 # (WRONG) invariant succ.p(X, X, X) & X ~= Y & X ~= Z & succ_2.f(Y, Z) & succ.p(Z, Y, Y) & ~succ.p(X, Y, Y) -> ~succ.p(Z, Y, X) # from chord35.dot
 
-# nodes can't have repeated successors (assuming the system always have at least 3 nodes)
+# nodes can't have repeated successors
 invariant succ_1.f(X, Y) & succ_2.f(X, Y) & active(Z) & ~failed(Z)-> X = Y & X = Z
 
-# (correct, but file verifies without it) nodes can't have itself as its own successor (assuming the system always have at least 3 nodes)
+# (correct, but file verifies without it) nodes can't have itself as its own successor
 invariant succ_1.f(X, X) & active(Z) & ~failed(Z) -> X = Z
 invariant succ_2.f(X, X) & succ_1.f(X, Y) & active(Z) & ~failed(Z) -> X = Z | (Y = Z & succ_1.f(Y, X)) 
 
@@ -235,7 +235,7 @@ invariant succ_1.f(X, Y) & succ_1.f(Y, X) & active(Z) & ~failed(Z) -> Z = X | Z 
 
 # is it true that succ_1 should reach succ_2? what if succ_1 stabilizes before node?
 
-# INVARIANTS that are correct, but file verifies without them
+# INVARIANTS that are correct, but file verifies without them (from stage 1)
 
 # (correct, but file verifies without it) only the root has itself as its own predecessor
 # invariant pred.f(X, X) -> X = root

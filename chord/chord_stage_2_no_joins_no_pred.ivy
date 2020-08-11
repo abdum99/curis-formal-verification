@@ -1,6 +1,7 @@
 #lang ivy1.7
 
-# assumptions: nodes can join anywhere, root don't fail, there are at least 3 nodes in the system
+# assumptions: there are no nodes joining, there is no pred relation, there are 3 initial nodes in the system and they never fail, at least one of the node's successors is alive
+
 include ring
 include partial_function
 include path_partial_function_dom
@@ -200,8 +201,9 @@ invariant succ_1.f(X, S1) & succ_2.f(X, S2) -> id_ring.btw(X, S1, S2)
 # if three nodes are on a cycle, they should follow btw relations
 invariant succ.p(X, Y, Z) & succ.p(X, X, X) & X ~= Y & X ~= Z & Y ~= Z -> id_ring.btw(X, Y, Z)
 
-invariant succ_1.f(X, S) & active(Y) & ~failed(Y) -> ~id_ring.btw(X, Y, S) # from chord36.dot
+# (correct, but file verifies without it) invariant succ_1.f(X, S) & active(Y) & ~failed(Y) -> ~id_ring.btw(X, Y, S) # from chord36.dot
 invariant succ_2.f(X, S2) & active(Y) & ~failed(Y) & id_ring.btw(X, Y, S2) -> succ_1.f(X, Y) # from chord40.dot
+invariant succ_2.f(X, S2) & active(Y) & ~failed(Y) & id_ring.btw(X, Y, S2) & succ.p(Y, Y, Y) -> succ_1.f(X, Y) # from chord40.dot
 # (WRONG) invariant succ_2.f(X, S2) & active(Y) & id_ring.btw(X, Y, S2) -> succ_1.f(X, Y) # from chord37.dot (wrong when Y has failed)
 
 # (correct, but file verifies without it) invariant X ~= Y & X ~= Z & Y ~= Z & succ.p(X, Y, Z) -> id_ring.btw(X, Y, Z)
