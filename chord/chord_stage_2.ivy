@@ -1,6 +1,6 @@
 #lang ivy1.7
 
-# assumptions: nodes joins at successor, nodes that failed do not return to the network, there are 3 initial nodes in the system and they never fail, at least one of the node's successors is alive
+# assumptions: nodes join at successor, nodes that failed do not return to the network, there are 3 initial nodes in the system and they never fail, at least one of the node's successors is alive
 
 include ring
 include partial_function
