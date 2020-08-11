@@ -1,0 +1,230 @@
+#lang ivy1.7
+
+# assumptions: nodes join at successor, nodes that failed do not return to the network, at least one of the node's successors is alive
+
+include ring
+include partial_function
+
+include path_partial_function_dom
+
+type id
+
+relation active(X:id)
+relation failed(X:id)
+instantiate pred: partial_function(id, id)
+instantiate succ_1: partial_function(id, id)
+instantiate succ_2: partial_function(id, id)
+instantiate id_ring : ring(id)
+instantiate succ : path_partial_function_dom(id)
+
+var root:id
+
+after init {
+    call pred.set(root, root);
+    call succ_1.set(root, root);
+    call succ_2.set(root, root);
+    call succ.set(root, root);
+    
+    active(X) := X = root;
+    failed(X) := false;
+}
+
+var a:id
+invariant active(a) & ~failed(a) -> exists Y. succ.p(a, Y, Y)
+
+action join(x:id, y:id) = {
+    # make sure x is not in the system and that y is
+    require ~active(x);
+    require active(y);
+    require ~failed(y);
+
+    var s := succ_1.get(y);
+    require s = y | forall Z. id_ring.btw(Z, x, s);
+    require ~failed(s);
+   
+    # creates succ list for x
+    call succ_1.set(x, s);
+    call succ.set(x, s);
+    var s_2 := succ_1.get(s);
+    call succ_2.set(x, s_2);
+    
+    # joins with no predecessor
+    assert ~pred.dom(x);
+
+    active(x) := true;
+    assume ~failed(x); # assuming nodes that failed do not return to the system
+}
+
+export join
+
+action fail(x:id) = {
+    require active(x);
+    require ~failed(x);
+    if pred.dom(x) {
+	call pred.remove(x);
+    };
+    call succ_1.remove(x);
+    if succ.dom(x) {
+	call succ.remove(x);
+    };
+    call succ_2.remove(x);
+    failed(x) := true;
+}
+
+export fail
+
+# check if pred has failed
+action check_pred(x:id) = {
+    require active(x);
+    require ~failed(x);
+    require pred.dom(x);
+    if failed(pred.get(x)) {
+	call pred.remove(x);
+    };
+}
+
+export check_pred
+
+action stabilize(x:id) = {
+    require active(x);
+    require ~failed(x);
+
+    var s_1 := succ_1.get(x);
+    var s_2 := succ_2.get(x);
+   
+    # assuming we have at least one live successor (reconsider if node should fail if both successors fail)
+    assume ~failed(s_1) | ~failed(s_2);
+    
+    # checks if immediate successor is alive
+    if failed(s_1) {
+	call succ_1.remove(x);
+	call succ.remove(x);
+	call succ_1.set(x, s_2);
+	call succ.set(x, s_2);
+    };
+
+    s_1 := succ_1.get(x);
+    assert ~failed(s_1);
+    
+    # asks x's successor for its predecessor and updates x's successor accordingly
+    if pred.dom(s_1) {
+	var y := pred.get(s_1);
+	if (id_ring.btw(x, y, s_1) | x = s_1) & ~failed(y) { # corner cases: x = y (no change), y = s (no change), or x = s (any other node is better than yourself)
+	    call succ_1.remove(x);
+	    call succ.remove(x);
+    	    call succ_1.set(x, y);
+	    call succ.set(x, y);
+	};
+    };
+    
+    s_1 := succ_1.get(x);
+    
+    # notifies x's successor of x's existence so that it can updates its predecessor
+    if pred.dom(s_1) {
+	var z := pred.get(s_1);
+	if id_ring.btw(z, x, s_1) | s_1 = z {
+	    call pred.remove(s_1);
+    	    call pred.set(s_1, x);
+	    # corner cases: x = z (no change), x = s (no change), or
+	    # z = s (since x's successor is correct, we know there is no node between x and s -> x is s's predecessor in the ring)
+	};
+    } else {
+	call pred.set(s_1, x);
+    };
+
+    # updates x's successors list
+    s_2 := succ_1.get(s_1);
+    call succ_2.remove(x);
+    call succ_2.set(x, s_2);
+}
+
+export stabilize
+
+# SPECIFICATION
+
+# there can't be two or more independent cycles
+invariant succ.p(X, X, X) & succ.p(Y, Y, Y) -> succ.p(X, Y, Y)
+#invariant forall X, Y. active(X) & active(Y) & ~failed(Y) & succ.p(X, X, X) -> succ.p(Y, X, X)
+
+# INVARIANTS about root
+invariant active(root)
+
+# INVARIANTS (basic)
+
+# only active nodes can fail
+invariant failed(X) -> active(X)
+
+# succ relations hold only between active nodes
+invariant succ_1.dom(X) -> active(X) & ~failed(X)
+invariant succ_2.dom(X) -> active(X) & ~failed(X)
+invariant succ_1.f(X, Y) -> active(Y)
+invariant succ_2.f(X, Y) -> active(Y)
+invariant active(X) & ~failed(X) -> succ_1.dom(X)
+invariant active(X) & ~failed(X) -> succ_2.dom(X)
+invariant succ.p(X, Y, Y) -> active(X) & ~failed(X)
+invariant succ.p(X, Y, Y) -> active(Y)
+invariant succ.dom(X) <-> active(X) & ~failed(X)
+
+invariant succ_1.f(X, Y) <-> succ.f(X, Y)
+invariant succ.p(X, Y, Z) -> succ_1.dom(X)
+
+# only active nodes can be each other predecessors (since there are no failures)
+invariant pred.dom(X) -> active(X) & ~failed(X)
+invariant pred.f(X, Y) -> active(X) & active(Y)
+invariant pred.f(X, Y) -> ~failed(X)
+# (correct, but file verifies without it) invariant ~pred.f(X, X)
+
+# immediate successors are reachable
+# (correct, but file verifies without it) invariant succ_1.f(X, Y) -> succ.p(X, Y, Y)
+# (correct, but file verifies without it) invariant succ_1.f(X, S) & succ.p(X, Y, Y) & ~failed(S) -> succ.p(X, S, Y) # from chord22.dot
+# (correct, but file verifies without it) invariant succ_1.f(X, X) & succ.p(X, Y, Y) -> X = Y # from chord21.dot
+
+# INVARIANTS (non-trivial)
+
+# INVARIANTS from no_joins_no_pred_no_roots
+
+# (correct only when nodes join at successor) invariant succ_1.f(X, S1) & succ_2.f(X, S2) & X ~= S1 & X ~= S2 & S1 ~= S2 -> id_ring.btw(X, S1, S2)
+
+# if three nodes are on a cycle, they should follow btw relations
+invariant succ.p(X, Y, Z) & succ.p(X, X, X) & X ~= Y & X ~= Z & Y ~= Z -> id_ring.btw(X, Y, Z)
+
+# (correct only when nodes join at successor) invariant succ_1.f(X, S) & active(Y) & ~failed(Y) -> ~id_ring.btw(X, Y, S) # from chord36.dot
+invariant succ_2.f(X, S2) & active(Y) & ~failed(Y) & id_ring.btw(X, Y, S2) -> succ_1.f(X, Y) # from chord40.dot (it is WRONG if nodes do NOT join at successor because of chord41.dot)
+
+# (correct, but file verifies without it) invariant X ~= Y & X ~= Z & Y ~= Z & succ.p(X, Y, Z) -> id_ring.btw(X, Y, Z)
+invariant succ.p(X, Z, Z) & id_ring.btw(X, Y, Z) & active(Y) & ~failed(Y) -> succ.p(X, Y, Z) # from chord39.dot + chord45.dot (it is WRONG if nodes do NOT join at successor because of chord41.dot)
+
+# (correct, but file verifies without it) invariant succ.p(X, X, X) & X ~= Y & succ_2.f(Y, Z) & succ.p(Z, Y, Y) -> succ.p(Z, X, X) # from chord33.dot 
+# (correct, but file verifies without it) invariant succ.p(X, X, X) & X ~= Y & succ_2.f(Y, Z) & succ.p(Z, Y, Y) & ~succ.p(Y, Y, Y) -> ~succ.p(Z, Y, X) # NEW from chord42.dot
+
+# nodes can't have repeated successors (assuming the system always have at least 3 nodes)
+# (correct, but file verifies without it) invariant ~(succ_1.f(X, Y) & succ_2.f(X, Y))
+
+# (correct, but file verifies without it) nodes can't have itself as its own successor (assuming the system always have at least 3 nodes)
+# (correct, but file verifies without it) invariant succ_1.f(X, X) & active(Z) & ~failed(Z) -> X = Z
+invariant succ_2.f(X, X) & succ_1.f(X, Y) & active(Z) & ~failed(Z) -> X = Z | (Y = Z & succ_1.f(Y, X)) 
+
+# (correct, but file verifies without it) nodes can't be its first successor's first successor/second successor
+# (correct, but file verifies without it) invariant succ_1.f(X, Y) & succ_1.f(Y, X) & active(Z) & ~failed(Z) -> Z = X | Z = Y # from chord34.dot 
+
+# (correct, but file verifies without it) nodes can't be its second successor's first successor (unless there are only 3 nodes)
+# invariant succ_2.f(X, S2) & succ_1.f(S2, X) & active(Y) & ~failed(Y) -> Y = root_1 | Y = root_2 | Y = root_3 # from chord44.dot
+
+# (WRONG) node's successor list should match its successor's successor list
+# (WRONG) invariant succ_1.f(X, S1) & succ_2.f(X, S2) & ~failed(S1) & ~failed(S2) -> succ_1.f(S1, S2) # (wrong: S1 could have stabilized and changed its succ)
+
+# (correct, but file verifies without it) if succ_2 reaches succ_1, succ_2 reaches nodes
+# invariant succ_1.f(X, S1) & succ_2.f(X, S2) & succ.p(S2, S1, S1) -> succ.p(S2, X, S1)
+# (WRONG) invariant succ_1.f(X, S1) & succ_2.f(X, S2) & ~failed(S1) & ~failed(S2) -> succ.p(X, S1, S2) # (wrong: S1 could have stabilized and changed its succ)
+
+# INVARIANTS relating pred with btw
+
+#invariant succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z & pred(Z, X) -> id_ring.btw(X, Y, Z) # got from chord10.dot
+# the nodes in the path between a node and its predecessor obey to the btw relation  
+#invariant forall P, N, X, Y, Z. pred(N, P) & succ.p(P, X, N) & succ.p(P, Y, N) & succ.p(P, Z, N) & succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z -> id_ring.btw(X, Y, Z) # correct, but use 5 quant, which makes ivy slow (next inv uses only 4 and is correct) from chord14.dot
+#invariant forall P, N, X, Y. pred(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & X ~= Y & X ~= P & Y ~= P & X ~= N & Y ~= N -> id_ring.btw(P, X, Y) # got from chord14.dot
+#invariant forall P, N, X, Y. pred(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & ~succ.p(N, Y, X) & X ~= Y & X ~= P & Y ~= P -> id_ring.btw(P, X, Y) # got from chord15.dot
+# (encompasses all above)
+
+invariant forall P, N, X, Y. pred.f(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & X ~= Y & X ~= P & Y ~= P & N ~= X -> id_ring.btw(P, X, Y) # got from chord15.dot and chord43.dot
+# (WRONG) invariant forall P, N, X. pred.f(N, P) & succ_2.f(X, N) & succ.p(N, N, N) & succ.p(P, X, X) & N ~= P & X ~= P & N ~= X -> id_ring.btw(X, N, P) # from chord28.txt
