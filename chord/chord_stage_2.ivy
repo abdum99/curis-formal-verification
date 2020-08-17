@@ -165,10 +165,6 @@ action stabilize(x:id) = {
 
 export stabilize
 
-# from chord49.dot
-# from chord50.dot
-# from chord52.dot
-
 # SPECIFICATION
 
 # there can't be two or more independent cycles
@@ -243,9 +239,8 @@ invariant succ_2.f(X, S2) & succ_1.f(X, S1) & principal(P) -> ~id_ring.btw(S1, P
 # invariant succ_1.f(root_3, S1)  & S1 ~= root_1 -> id_ring.btw(root_3, S1, root_1)
 # invariant succ_2.f(root_3, S2)  & S2 ~= root_2 -> id_ring.btw(root_3, S2, root_2)
 
-# (MAYBE) if node is in cycle, first succ is in cycle
-invariant succ_1.f(X, S1) & succ.p(X, X, X) -> succ.p(S1, S1, S1)
-# (WRONG)  if node is in cycle -> second succ is in cycle (if it hasn't failed) invariant succ_2.f(X, S2) & ~failed(S2) & succ.p(X, X, X) -> succ.p(S2, S2, S2)
+# (for verified file: correct, but file verifies without it) if node is in cycle, first succ is in cycle invariant succ_1.f(X, S1) & succ.p(X, X, X) -> succ.p(S1, S1, S1)
+# (WRONG) if node is in cycle -> second succ is in cycle (if it hasn't failed) invariant succ_2.f(X, S2) & ~failed(S2) & succ.p(X, X, X) -> succ.p(S2, S2, S2)
 
 # INVARIANTS from no_joins_no_pred_no_roots
 
@@ -260,28 +255,25 @@ invariant succ.p(X, Y, Z) & succ.p(X, X, X) & X ~= Y & X ~= Z & Y ~= Z -> id_rin
 # (WRONG for joins) invariant [can't_skip_live_node] succ.p(X, Z, Z) & id_ring.btw(X, Y, Z) & active(Y) & ~failed(Y) -> succ.p(X, Y, Z) # from chord39.dot + chord45.dot (it is WRONG if nodes do NOT join at successor because of chord41.dot)
 # (WRONG for stabilize) invariant succ.p(X, Z, Z) & id_ring.btw(X, Y, Z) & active(Y) & ~failed(Y) & succ.p(X, Y, Y) -> succ.p(X, Y, Z) # from chord39.dot + chord45.dot (it is WRONG if nodes do NOT join at successor because of chord41.dot)
 
-# invariant succ.p(X, X, X) & X ~= Y & succ_2.f(Y, Z) & succ.p(Z, Y, Y) -> succ.p(Z, X, X) # from chord33.dot 
-# invariant succ.p(X, X, X) & X ~= Y & succ_2.f(Y, Z) & succ.p(Z, Y, Y) & ~succ.p(Y, Y, Y) -> ~succ.p(Z, Y, X) # NEW from chord42.dot
+# (WRONG for joins) invariant succ.p(X, X, X) & X ~= Y & succ_2.f(Y, Z) & succ.p(Z, Y, Y) -> succ.p(Z, X, X) # from chord33.dot 
+# (WRONG for joins) invariant succ.p(X, X, X) & X ~= Y & succ_2.f(Y, Z) & succ.p(Z, Y, Y) & ~succ.p(Y, Y, Y) -> ~succ.p(Z, Y, X) # NEW from chord42.dot
 
-# nodes can't have repeated successors (assuming the system always have at least 3 nodes)
-invariant ~(succ_1.f(X, Y) & succ_2.f(X, Y))
+# (for verified file: correct, but file verifies without it) nodes can't have repeated successors (assuming the system always have at least 3 nodes) invariant ~(succ_1.f(X, Y) & succ_2.f(X, Y))
 
 # if node's successor's successor list skips a live node, then this skipped node can't be in the node's successor list
 # (probably WRONG) invariant succ_1.f(S, S1) & succ_2.f(S, S2) & active(Y) & ~failed(Y) & (id_ring.btw(S, Y, S1) | id_ring.btw(S1, Y, S2)) & succ_1.f(X, S) -> ~succ_2.f(X, Y) # from PODC paper (Def. 5.6.5)
 
 # (WRONG for joins) invariant succ_1.f(X, S) & active(Y) & ~failed(Y) -> ~id_ring.btw(X, Y, S) # from chord36.dot (wrong because of chord48.dot)
 # (WRONG for stabilize) invariant succ_1.f(X, S) & active(Y) & ~failed(Y) & succ.p(Y, Y, Y) -> ~id_ring.btw(X, Y, S) # from chord36.dot + chord48.dot
-# invariant succ_1.f(X, S) & active(Y) & ~failed(Y) & succ.p(X, X, X) & succ.p(Y, Y, Y) -> ~id_ring.btw(X, Y, S) # from PODC paper (Def. 5.6.5)
+# (possibly WRONG) invariant succ_1.f(X, S) & active(Y) & ~failed(Y) & succ.p(X, X, X) & succ.p(Y, Y, Y) -> ~id_ring.btw(X, Y, S) # from PODC paper (Def. 5.6.5)
 # (WRONG for joins) invariant [only_succ_1_btw_x_s2] succ_2.f(X, S2) & active(Y) & ~failed(Y) & id_ring.btw(X, Y, S2) -> succ_1.f(X, Y) # from chord40.dot (it is WRONG if nodes do NOT join at successor because of chord41.dot)
-# invariant succ_2.f(X, S2) & active(Y) & ~failed(Y) & id_ring.btw(X, Y, S2) & succ.p(X, X, X) & succ.p(Y, Y, Y) -> succ_1.f(X, Y)
 # (WRONG for stabilize) invariant succ_2.f(X, S2) & active(Y) & ~failed(Y) & id_ring.btw(X, Y, S2) & succ.p(X, Y, Y) -> succ_1.f(X, Y) # from chord40.dot (it is WRONG if nodes do NOT join at successor because of chord41.dot)
 
 # (correct, but file verifies without it) nodes can't have itself as its own successor (assuming the system always have at least 3 nodes)
 # (correct, but file verifies without it) invariant succ_1.f(X, X) & active(Z) & ~failed(Z) -> X = Z
-invariant ~succ_2.f(X, X) # invariant succ_2.f(X, X) & succ_1.f(X, Y) & active(Z) & ~failed(Z) -> X = Z | (Y = Z & succ_1.f(Y, X)) 
+# (for verified file: correct, but file verifies without it) invariant ~succ_2.f(X, X) # invariant succ_2.f(X, X) & succ_1.f(X, Y) & active(Z) & ~failed(Z) -> X = Z | (Y = Z & succ_1.f(Y, X)) 
 
-# (correct, but file verifies without it) nodes can't be its first successor's first successor/second successor
-invariant succ_1.f(X, Y) & succ_1.f(Y, X) & active(Z) & ~failed(Z) -> Z = X | Z = Y # from chord34.dot 
+# (for verified file: correct, but file verifies without it) nodes can't be its first successor's first successor/second successor invariant succ_1.f(X, Y) & succ_1.f(Y, X) & active(Z) & ~failed(Z) -> Z = X | Z = Y # from chord34.dot 
 
 # (correct, but file verifies without it) nodes can't be its second successor's first successor (unless there are only 3 nodes)
 # invariant succ_2.f(X, S2) & succ_1.f(S2, X) & active(Y) & ~failed(Y) -> Y = root_1 | Y = root_2 | Y = root_3 # from chord44.dot
@@ -304,7 +296,7 @@ invariant succ_1.f(X, Y) & succ_1.f(Y, X) & active(Z) & ~failed(Z) -> Z = X | Z 
 
 # (WRONG for stage 2) invariant forall P, N, X, Y. pred.f(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & X ~= Y & X ~= P & Y ~= P & N ~= X -> id_ring.btw(P, X, Y) # got from chord15.dot and chord43.dot
 # (propably WRONG for stage 2) invariant forall P, N, X. pred.f(N, P) & succ.p(P, X, X) & id_ring.btw(P, N, X) & id_ring.btw(P, Y, N) -> succ.p(P, N, X) | succ.p(P, Y, X) # from chord58.dot + chord59.dot (wrong because of chord60.dot)
-#invariant forall X, Y, S2. succ_2.f(X, S2) & succ.p(X, S2, S2) & active(Y) & ~failed(Y) & succ.p(X, Y, S2) & X ~= Y & S2 ~= Y -> id_ring.btw(X, Y, S2)
+# (WRONG) invariant forall X, Y, S2. succ_2.f(X, S2) & succ.p(X, S2, S2) & active(Y) & ~failed(Y) & succ.p(X, Y, S2) & X ~= Y & S2 ~= Y -> id_ring.btw(X, Y, S2)
 # (WRONG) invariant forall P, N, X. pred.f(N, P) & succ_2.f(X, N) & succ.p(N, N, N) & succ.p(P, X, X) & N ~= P & X ~= P & N ~= X -> id_ring.btw(X, N, P) # from chord28.txt
 
 # (WRONG) invariant forall P, N, X. pred.f(N, P) & succ.p(P, X, X) & id_ring.btw(P, N, X) -> succ.p(P, N, X) # from chord58.dot (wrong because of chord59.dot)
