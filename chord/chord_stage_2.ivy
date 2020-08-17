@@ -1,6 +1,6 @@
 #lang ivy1.7
 
-# assumptions: nodes join at successor, nodes that failed do not return to the network, there are 3 initial nodes in the system and they never fail, at least one of the node's successors is alive
+# assumptions: nodes join at successor, nodes that failed do not return to the network, there are 3 initial nodes in the system (principal nodes) and they never fail, at least one of the node's successors is alive
 
 include ring
 include partial_function
@@ -169,10 +169,6 @@ export stabilize
 # from chord50.dot
 # from chord52.dot
 
-# (WRONG) invariant forall P, N, X. pred.f(N, P) & succ.p(P, X, X) & id_ring.btw(P, N, X) -> succ.p(P, N, X) # from chord58.dot (wrong because of chord59.dot)
-invariant forall P, N, X, Y. pred.f(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & X ~= Y & X ~= P & Y ~= P & N ~= X -> id_ring.btw(P, X, Y) # got from chord15.dot and chord43.dot
-invariant forall P, N, X. pred.f(N, P) & succ.p(P, X, X) & id_ring.btw(P, N, X) & id_ring.btw(P, Y, N) -> succ.p(P, N, X) | succ.p(P, Y, X) # from chord58.dot + chord59.dot
-
 # SPECIFICATION
 
 # there can't be two or more independent cycles
@@ -299,13 +295,19 @@ invariant succ_1.f(X, Y) & succ_1.f(Y, X) & active(Z) & ~failed(Z) -> Z = X | Z 
 
 # INVARIANTS relating pred with btw
 
-#invariant succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z & pred(Z, X) -> id_ring.btw(X, Y, Z) # got from chord10.dot
+# invariant succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z & pred.f(Z, X) -> id_ring.btw(X, Y, Z) # got from chord10.dot
 # the nodes in the path between a node and its predecessor obey to the btw relation  
 #invariant forall P, N, X, Y, Z. pred(N, P) & succ.p(P, X, N) & succ.p(P, Y, N) & succ.p(P, Z, N) & succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z -> id_ring.btw(X, Y, Z) # correct, but use 5 quant, which makes ivy slow (next inv uses only 4 and is correct) from chord14.dot
-#invariant forall P, N, X, Y. pred(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & X ~= Y & X ~= P & Y ~= P & X ~= N & Y ~= N -> id_ring.btw(P, X, Y) # got from chord14.dot
+# invariant forall P, N, X, Y. pred.f(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & X ~= Y & X ~= P & Y ~= P & X ~= N & Y ~= N -> id_ring.btw(P, X, Y) # got from chord14.dot
 #invariant forall P, N, X, Y. pred(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & ~succ.p(N, Y, X) & X ~= Y & X ~= P & Y ~= P -> id_ring.btw(P, X, Y) # got from chord15.dot
 # (encompasses all above)
 
-# invariant forall P, N, X, Y. pred.f(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & X ~= Y & X ~= P & Y ~= P & N ~= X -> id_ring.btw(P, X, Y) # got from chord15.dot and chord43.dot
+# (WRONG for stage 2) invariant forall P, N, X, Y. pred.f(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & X ~= Y & X ~= P & Y ~= P & N ~= X -> id_ring.btw(P, X, Y) # got from chord15.dot and chord43.dot
+# (propably WRONG for stage 2) invariant forall P, N, X. pred.f(N, P) & succ.p(P, X, X) & id_ring.btw(P, N, X) & id_ring.btw(P, Y, N) -> succ.p(P, N, X) | succ.p(P, Y, X) # from chord58.dot + chord59.dot (wrong because of chord60.dot)
 #invariant forall X, Y, S2. succ_2.f(X, S2) & succ.p(X, S2, S2) & active(Y) & ~failed(Y) & succ.p(X, Y, S2) & X ~= Y & S2 ~= Y -> id_ring.btw(X, Y, S2)
 # (WRONG) invariant forall P, N, X. pred.f(N, P) & succ_2.f(X, N) & succ.p(N, N, N) & succ.p(P, X, X) & N ~= P & X ~= P & N ~= X -> id_ring.btw(X, N, P) # from chord28.txt
+
+# (WRONG) invariant forall P, N, X. pred.f(N, P) & succ.p(P, X, X) & id_ring.btw(P, N, X) -> succ.p(P, N, X) # from chord58.dot (wrong because of chord59.dot)
+# (WRONG) invariant pred.f(N, P) & succ_1.f(P, S) -> ~id_ring.btw(P, N, S)
+
+
