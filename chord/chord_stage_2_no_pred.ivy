@@ -136,14 +136,18 @@ action stabilize(x:id) = {
     s_1 := succ_1.get(x);
     assert ~failed(s_1);
 
-    var y := get_pred(s_1);
+    var b:bool;
     
-    # asks x's successor for its predecessor and updates x's successor accordingly
-    if (id_ring.btw(x, y, s_1) | x = s_1) { # corner cases: x = y (no change), y = s (no change), or x = s (any other node is better than yourself)
-    	call succ_1.remove(x);
-    	call succ.remove(x);
-    	call succ_1.set(x, y);
-    	call succ.set(x, y);
+    if b {
+	var y := get_pred(s_1);
+	
+	# asks x's successor for its predecessor and updates x's successor accordingly
+	if (id_ring.btw(x, y, s_1) | x = s_1) { # corner cases: x = y (no change), y = s (no change), or x = s (any other node is better than yourself)
+    	    call succ_1.remove(x);
+    	    call succ.remove(x);
+    	    call succ_1.set(x, y);
+    	    call succ.set(x, y);
+	};
     };
     
     s_1 := succ_1.get(x);
@@ -247,8 +251,7 @@ invariant succ_2.f(X, S2) & succ_1.f(X, S1) & principal(P) -> ~id_ring.btw(S1, P
 # invariant succ_1.f(root_3, S1)  & S1 ~= root_1 -> id_ring.btw(root_3, S1, root_1)
 # invariant succ_2.f(root_3, S2)  & S2 ~= root_2 -> id_ring.btw(root_3, S2, root_2)
 
-# (MAYBE) if node is in cycle, first succ is in cycle
-invariant succ_1.f(X, S1) & succ.p(X, X, X) -> succ.p(S1, S1, S1)
+# (no need) if node is in cycle, first succ is in cycle invariant succ_1.f(X, S1) & succ.p(X, X, X) -> succ.p(S1, S1, S1)
 # (WRONG)  if node is in cycle -> second succ is in cycle (if it hasn't failed) invariant succ_2.f(X, S2) & ~failed(S2) & succ.p(X, X, X) -> succ.p(S2, S2, S2)
 
 # # INVARIANTS from no_joins_no_pred_no_roots

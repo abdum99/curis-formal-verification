@@ -133,8 +133,10 @@ action stabilize(x:id) = {
     
     # asks x's successor for its predecessor and updates x's successor accordingly
     if pred.dom(s_1) {
-	var y := pred.get(s_1);
-	if (id_ring.btw(x, y, s_1) | x = s_1) & ~failed(y) { # corner cases: x = y (no change), y = s (no change), or x = s (any other node is better than yourself)
+	# var y := pred.get(s_1);
+	var y:id;
+	
+	if (id_ring.btw(x, y, s_1) | x = s_1) & active(y) & ~failed(y) { # corner cases: x = y (no change), y = s (no change), or x = s (any other node is better than yourself)
 	    call succ_1.remove(x);
 	    call succ.remove(x);
     	    call succ_1.set(x, y);
@@ -245,10 +247,10 @@ invariant succ_2.f(X, S2) & succ_1.f(X, S1) & principal(P) -> ~id_ring.btw(S1, P
 # INVARIANTS from no_joins_no_pred_no_roots
 
 # (WRONG for joins) invariant succ_1.f(X, S1) & succ_2.f(X, S2) & X ~= S1 & X ~= S2 & S1 ~= S2 &' ~failed(S2) -> id_ring.btw(X, S1, S2) # (wrong for joins because of chord53.dot)
-invariant [succ_list_is_ordered] succ_1.f(X, S1) & succ_2.f(X, S2) & X ~= S1 & X ~= S2 & S1 ~= S2 & ~failed(S2) -> id_ring.btw(X, S1, S2) # from chord51.dot + chord53.dot (need [root_1/root_2/root_3_in_cycle] invariants)
+# (correct, but file verifies without it) invariant [succ_list_is_ordered] succ_1.f(X, S1) & succ_2.f(X, S2) & X ~= S1 & X ~= S2 & S1 ~= S2 & ~failed(S2) -> id_ring.btw(X, S1, S2) # from chord51.dot + chord53.dot (need [root_1/root_2/root_3_in_cycle] invariants)
 
-# if three nodes are on a cycle, they should follow btw relations
-invariant succ.p(X, Y, Z) & succ.p(X, X, X) & X ~= Y & X ~= Z & Y ~= Z -> id_ring.btw(X, Y, Z)
+# (correct, but file verifies without it) if three nodes are on a cycle, they should follow btw relations
+# invariant succ.p(X, Y, Z) & succ.p(X, X, X) & X ~= Y & X ~= Z & Y ~= Z -> id_ring.btw(X, Y, Z)
 
 # invariant X ~= Y & X ~= Z & Y ~= Z & succ.p(X, Y, Z) -> id_ring.btw(X, Y, Z)
 
@@ -292,9 +294,13 @@ invariant succ.p(X, Y, Z) & succ.p(X, X, X) & X ~= Y & X ~= Z & Y ~= Z -> id_rin
 #invariant forall P, N, X, Y, Z. pred(N, P) & succ.p(P, X, N) & succ.p(P, Y, N) & succ.p(P, Z, N) & succ.p(X, Y, Z) & X ~= Y & Y ~= Z & X ~= Z -> id_ring.btw(X, Y, Z) # correct, but use 5 quant, which makes ivy slow (next inv uses only 4 and is correct) from chord14.dot
 # invariant forall P, N, X, Y. pred.f(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & X ~= Y & X ~= P & Y ~= P & X ~= N & Y ~= N -> id_ring.btw(P, X, Y) # got from chord14.dot
 #invariant forall P, N, X, Y. pred(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & ~succ.p(N, Y, X) & X ~= Y & X ~= P & Y ~= P -> id_ring.btw(P, X, Y) # got from chord15.dot
-# (encompasses all above)
 
-# (WRONG for stage 2) invariant forall P, N, X, Y. pred.f(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & X ~= Y & X ~= P & Y ~= P & N ~= X -> id_ring.btw(P, X, Y) # got from chord15.dot and chord43.dot
+# (WRONG for stage 2) (encompasses all above)
+# invariant forall P, N, X, Y. pred.f(N, P) & succ.p(P, X, N) & succ.p(X, Y, N) & X ~= Y & X ~= P & Y ~= P & N ~= X -> id_ring.btw(P, X, Y) # got from chord15.dot and chord43.dot
+# invariant forall P, N, X. pred.f(N, P) & ~succ.p(P, N, N) & succ.p(P, X, X) -> id_ring.btw(P, X, N) # from chord58.dot + chord59.dot (wrong because of chord60.dot)
+# invariant forall P, N, X, Y. pred.f(N, P) & ~succ.p(P, N, N) & succ.p(P, X, Y) & X ~= Y -> id_ring.btw(P, X, Y) # from chord58.dot + chord59.dot (wrong because of chord60
+
+
 # (propably WRONG for stage 2) invariant forall P, N, X. pred.f(N, P) & succ.p(P, X, X) & id_ring.btw(P, N, X) & id_ring.btw(P, Y, N) -> succ.p(P, N, X) | succ.p(P, Y, X) # from chord58.dot + chord59.dot (wrong because of chord60.dot)
 # (WRONG) invariant forall X, Y, S2. succ_2.f(X, S2) & succ.p(X, S2, S2) & active(Y) & ~failed(Y) & succ.p(X, Y, S2) & X ~= Y & S2 ~= Y -> id_ring.btw(X, Y, S2)
 # (WRONG) invariant forall P, N, X. pred.f(N, P) & succ_2.f(X, N) & succ.p(N, N, N) & succ.p(P, X, X) & N ~= P & X ~= P & N ~= X -> id_ring.btw(X, N, P) # from chord28.txt
